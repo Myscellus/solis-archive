@@ -270,6 +270,7 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  myth: "images/myth.png",
   opera: "images/opera.png",
   eurasia: "images/eurasia.jpg",
   oceania: "images/oceania.jpg",
@@ -382,7 +383,7 @@ see: ["council","founding-myth","places-oceania","adc","house-cressida","house-s
 id: "founding-myth", title: "There Was No Other Way", cat: "History", acc: "HI-003", status: "Restricted", accent: "oc",
 banner: ["danger","Banned material","This record discusses material banned in Oceania. Possession is a matter for Harrow Station."],
 lead: "<p><b>\"There was no other way\"</b> is the founding doctrine of [[oceania|Oceania]]: the belief that surviving the [[cataclysm|Cataclysm]] required everything Oceania became. It is taught to every child before conscription and repeated in every bulletin.[^1]</p>",
-info: { art: "citadel", caption: "A doctrine printed daily.", rows: [["Type","State doctrine"],["Taught","From childhood"],["Enforced by","Censorship; Harrow Station"],["Authored by","[[redact:Largely House Sylvian]]"],["Disproved by","[[redact:Novagrad]]"]] },
+info: { art: "myth", caption: "Exhibit, Harrow Station.", pcap: "A schoolroom history recovered during a Harrow Station search of a teacher's lodgings. The opening chapters, covering the first years after the Cataclysm, had been cut out with the knife found beside it. The teacher maintained the pages were already missing when the book was issued. Both accounts are on file.[^2]", rows: [["Type","State doctrine"],["Taught","From childhood"],["Enforced by","Censorship; Harrow Station"],["Authored by","[[redact:Largely House Sylvian]]"],["Disproved by","[[redact:Novagrad]]"]] },
 sections: [
 { h: "The doctrine", html: "<p>The official account holds that the cold, the hunger and the conquered peoples left Oceania no choice. Conscription at twelve, rank as worth, the end of the churches and absolute obedience were not decisions but necessities. Anything softer, the doctrine says, would have died in the snow.</p>" },
 { h: "What is banned", html: "<ul><li>Histories of the first years after the Cataclysm, before the official account was written.[^2]</li><li>Foreign accounts of how other nations survived.</li><li>Anything printed in or about [[novagrad|Novagrad]].</li></ul>" },
@@ -771,7 +772,7 @@ function insignia(g,W,H,n){
 const BY_ID = Object.fromEntries(R.map(r => [r.id, r]));
 
 /* ===================== ART HOOKS ===================== */
-const BANNER = { cataclysm: "cataclysm", adc: "adc-sketch", noctis: "ivory", edmund: "insignia-4", tzadik: "greymarch", melvyn: "citadel", lysander: "oceania", ansel: "opera" };
+const BANNER = { "founding-myth": "myth", cataclysm: "cataclysm", adc: "adc-sketch", noctis: "ivory", edmund: "insignia-4", tzadik: "greymarch", melvyn: "citadel", lysander: "oceania", ansel: "opera" };
 function thumbFor(id){ return ART["thumb-" + id] ? "thumb-" + id : artFor(id); }
 function artFor(id){ const r = BY_ID[id]; if (r && r.info && r.info.art.startsWith("insignia") && ART[r.info.art]) return r.info.art; return BANNER[id] || (r && r.info && r.info.art) || "world"; }
 function artHTML(key, label, cls){ return `<div class="art ${cls||""}" data-art="${key}" role="img" aria-label="${label||""}"></div>`; }
@@ -818,8 +819,8 @@ function plain(html){ const d = document.createElement("div"); d.innerHTML = htm
 /* ===================== VIEWS (broadsheet) ===================== */
 const view = document.getElementById("view");
 
-const CREDIT = { world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
-const BANNER_CAP = { cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "Arrivals at the Pandora on a performance night. The matriarch sang the Greymarch victory to a full house; officers' carriages were turned away at the corner for want of room.", council: "City Hall, the Citadel, where the council meets." };
+const CREDIT = { myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
+const BANNER_CAP = { myth: "A schoolroom history recovered during a Harrow Station search of a teacher's lodgings. The opening chapters, covering the first years after the Cataclysm, had been cut out with the knife found beside it. The teacher maintained the pages were already missing when the book was issued. Both accounts are on file.[^2]", cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "Arrivals at the Pandora on a performance night. The matriarch sang the Greymarch victory to a full house; officers' carriages were turned away at the corner for want of room.", council: "City Hall, the Citadel, where the council meets." };
 const HEADLINES = {
   cataclysm: ["Half of Solis Goes to War; the Sky Does Not Return", "Every surviving nation agrees on how it ended. None of them agree on how it began."],
   eurasia: ["Crown and Altar Endure a Thousandth Winter", "The realm that came through the fire intact credits Providence, and its geothermal vents."],
