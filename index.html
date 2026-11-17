@@ -270,6 +270,7 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  council: "images/council.jpg",
   myth: "images/myth.png",
   opera: "images/opera.png",
   eurasia: "images/eurasia.jpg",
@@ -399,7 +400,7 @@ see: ["oceania","novagrad","house-sylvian","cataclysm"]
 {
 id: "council", title: "The Council of Nine", cat: "Institutions", acc: "IN-001", status: "Open", accent: "oc",
 lead: "<p>The <b>Council of Nine</b> is the body of Generals who advise the Emperor of [[oceania|Oceania]]. Each General commands a division of the military. Together they are the most powerful people in the empire after the Emperor himself.</p>",
-info: { art: "council", caption: "City Hall, the Citadel, where the council meets.", rows: [["Convened by","The Emperor"],["Seat","City Hall, the Citadel"],["Members","Nine Generals"],["Open records","Six"]] },
+info: { art: "council", caption: "City Hall, the Citadel, where the council meets.", pcap: "City Hall on the night of a full sitting. Sentries are posted at every door for the duration. The cars at the kerb belong to the Generals; the carriage is the Fourth General\'s, who does not trust engines in the cold.", rows: [["Convened by","The Emperor"],["Seat","City Hall, the Citadel"],["Members","Nine Generals"],["Open records","Six"]] },
 sections: [
 { h: "Members", html: "<div class=\"table-wrap\"><table><tr><th>Seat</th><th>General</th><th>Known for</th></tr><tr><td>First</td><td colspan=\"2\"><i>Record sealed</i>[^1]</td></tr><tr><td>Second</td><td colspan=\"2\"><i>Record sealed</i></td></tr><tr><td>Third</td><td>[[noctis|Noctis]]</td><td>The Night Raiders; Ivory Edge</td></tr><tr><td>Fourth</td><td>[[edmund|Edmund Quinnell]]</td><td>Three centuries of Quinnell service</td></tr><tr><td>Fifth</td><td>[[tzadik|Tzadik Kain]]</td><td>Hero of Greymarch Pass</td></tr><tr><td>Sixth</td><td>[[melvyn|Melvyn]]</td><td>Traitor-hunting; \"complications\"</td></tr><tr><td>Seventh</td><td colspan=\"2\"><i>Record sealed</i></td></tr><tr><td>Eighth</td><td>[[lysander|Lysander Thorne]]</td><td>Youngest General</td></tr><tr><td>Ninth</td><td>[[ansel|Ansel Sylvian]]</td><td>Punitive operations; the black seal</td></tr></table></div>" },
 { h: "Composition", html: "<p>Every known member of the council is a man. The older Generals tend to be career soldiers from military families; several of the younger ones rose with the help of powerful houses or fathers.[^2] Two, the Fourth and the Fifth, are regarded even by their rivals as genuine war heroes.</p>" },
@@ -772,7 +773,7 @@ function insignia(g,W,H,n){
 const BY_ID = Object.fromEntries(R.map(r => [r.id, r]));
 
 /* ===================== ART HOOKS ===================== */
-const BANNER = { "founding-myth": "myth", cataclysm: "cataclysm", adc: "adc-sketch", noctis: "ivory", edmund: "insignia-4", tzadik: "greymarch", melvyn: "citadel", lysander: "oceania", ansel: "opera" };
+const BANNER = { council: "council", "founding-myth": "myth", cataclysm: "cataclysm", adc: "adc-sketch", noctis: "ivory", edmund: "insignia-4", tzadik: "greymarch", melvyn: "citadel", lysander: "oceania", ansel: "opera" };
 function thumbFor(id){ return ART["thumb-" + id] ? "thumb-" + id : artFor(id); }
 function artFor(id){ const r = BY_ID[id]; if (r && r.info && r.info.art.startsWith("insignia") && ART[r.info.art]) return r.info.art; return BANNER[id] || (r && r.info && r.info.art) || "world"; }
 function artHTML(key, label, cls){ return `<div class="art ${cls||""}" data-art="${key}" role="img" aria-label="${label||""}"></div>`; }
