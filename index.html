@@ -224,6 +224,15 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
 .rec-main figure:has(.art.natural) figcaption { max-width: 100%; }
 .art[data-art="adc-sketch"]::after { display: none; }
 .art[data-art="adc-sketch"] img { filter: none; }
+.overreach { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; background: rgba(29,26,22,.35); cursor: pointer; transition: opacity 1s; padding: 16px; }
+.overreach.fade { opacity: 0; }
+.stamp-big { border: 6px double var(--red); color: var(--red); padding: 22px 30px; transform: rotate(-8deg); background: rgba(239,231,213,.94); text-align: center; max-width: 560px; font: 500 14px var(--f-mono); text-transform: uppercase; letter-spacing: .12em; box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.stamp-big b { display: block; font: 700 clamp(26px, 4vw, 40px)/1.1 var(--f-head); letter-spacing: .02em; margin-bottom: 8px; }
+.stamp-big small { display: block; font-size: 11px; margin-top: 10px; opacity: .8; }
+@media (prefers-reduced-motion: no-preference) {
+  .stamp-big { animation: thud .35s cubic-bezier(.2,1.6,.4,1) both; }
+  @keyframes thud { from { transform: rotate(-8deg) scale(1.8); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+}
 </style>
 </head>
 <body>
@@ -915,7 +924,25 @@ function renderHome(){
   renderArt(view);
 }
 
+let overreachShown = false;
+function checkOverreach(){
+  if (overreachShown || !view.querySelector(".rec-top")) return;
+  if (view.querySelector("[data-declassify], .redact:not(.open)")) return;
+  overreachShown = true;
+  const id = location.hash.slice(1) || "records";
+  const no = "HS-" + ((hash(id) % 9000) + 1000);
+  const top = view.querySelector(".rec-top");
+  const old = top.querySelector(".stamp-mark"); if (old) old.remove();
+  top.insertAdjacentHTML("beforeend", `<span class="stamp-mark" aria-hidden="true">Report filed</span>`);
+  const am = view.querySelector(".amended"); if (am) am.insertAdjacentHTML("beforeend", ` · <span style="color:var(--red)">Reader's access logged, file ${no}</span>`);
+  const d = document.createElement("div"); d.className = "overreach"; d.setAttribute("role", "alert");
+  d.innerHTML = `<div class="stamp-big"><b>You have read too much.</b>A report has been filed with Harrow Station.<small>File ${no} · Reader's access logged</small></div>`;
+  document.body.appendChild(d);
+  d.addEventListener("click", () => d.remove());
+  setTimeout(() => d.classList.add("fade"), 4200); setTimeout(() => d.remove(), 5300);
+}
 function renderRecord(r){
+  overreachShown = false;
   const cls = r.status.toLowerCase();
   const key = artFor(r.id);
   const sameArt = r.info && r.info.art === key;
@@ -962,6 +989,7 @@ function renderRecord(r){
 }
 
 function renderIndex(){
+  overreachShown = false;
   view.innerHTML = `<div class="sheet">
     ${mastheadSmall("Classified section")}
     <div class="rec-top">
@@ -1026,8 +1054,8 @@ document.addEventListener("click", e => {
   if (t.matches("[data-fn]")) { const n = t.dataset.fn; lastRef[n] = t; const li = document.getElementById("note-" + n); if (li) { li.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); flash(li); } hideTip(); return; }
   if (t.matches("[data-back]")) { const ref = lastRef[t.dataset.back] || document.querySelector(`[data-fn="${t.dataset.back}"]`); if (ref) { ref.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); ref.focus({ preventScroll: true }); } return; }
   if (t.matches("[data-goto]")) { const el = document.getElementById(t.dataset.goto); if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return; }
-  if (t.matches("[data-declassify]")) { const b = document.getElementById("rb-" + t.dataset.declassify); b.hidden = false; t.parentElement.querySelector("span").textContent = "□ DECLASSIFIED · READ AT YOUR OWN RISK"; t.remove(); renderArt(b); return; }
-  if (t.matches(".redact")) { t.classList.add("open"); t.removeAttribute("role"); t.removeAttribute("tabindex"); t.removeAttribute("title"); t.setAttribute("aria-label", "Declassified"); return; }
+  if (t.matches("[data-declassify]")) { const b = document.getElementById("rb-" + t.dataset.declassify); b.hidden = false; t.parentElement.querySelector("span").textContent = "□ DECLASSIFIED · READ AT YOUR OWN RISK"; t.remove(); renderArt(b); checkOverreach(); return; }
+  if (t.matches(".redact")) { t.classList.add("open"); t.removeAttribute("role"); t.removeAttribute("tabindex"); t.removeAttribute("title"); t.setAttribute("aria-label", "Declassified"); checkOverreach(); return; }
 });
 document.addEventListener("keydown", e => { const t = e.target; if ((e.key === "Enter" || e.key === " ") && t.classList && t.classList.contains("redact")) { e.preventDefault(); t.click(); } if (e.key === "Escape") { hideTip(); closeResults(); } });
 document.addEventListener("mouseover", e => { const b = e.target.closest("[data-fn]"); if (b) showTip(b); });
