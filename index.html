@@ -270,6 +270,7 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  opera: "images/opera.png",
   eurasia: "images/eurasia.jpg",
   oceania: "images/oceania.jpg",
   "insignia-4": "images/edmund.png",
@@ -534,7 +535,7 @@ see: ["melvyn","oceania","house-sylvian"]
 id: "house-sylvian", title: "House Sylvian", cat: "Institutions", acc: "IN-003", status: "Open", accent: "oc",
 banner: ["","Source notice","Some of this archive's Oceanian sources are Sylvian bulletins. Readers are advised accordingly."],
 lead: "<p><b>House Sylvian</b> deals in information. It controls intelligence and networking in [[oceania|Oceania]] through the entertainment industry: opera houses, brothels and leisure establishments. If propaganda is circulating in Oceania, Sylvian is behind it.</p>",
-info: { art: "opera", caption: "The Pandora on a performance night.", rows: [["Head","The matriarch"],["Heir","[[ansel|Ansel Sylvian]], Ninth General"],["Holdings","The Pandora; the Rose; the bulletins"],["Family saying","\"Waste is the only sin.\""]] },
+info: { art: "opera", caption: "Arrivals at the Pandora on a performance night.", rows: [["Head","The matriarch"],["Heir","[[ansel|Ansel Sylvian]], Ninth General"],["Holdings","The Pandora; the Rose; the bulletins"],["Family saying","\"Waste is the only sin.\""]] },
 sections: [
 { h: "Methods", html: "<p>Nobody knows how the Sylvians collect their information; everyone knows they are extraordinarily smooth at it. They are the empire's shadow infrastructure, shaping perception while [[house-cressida|House Cressida]] pays for the army.[^1]</p>" },
 { h: "Holdings", html: "<p><b>The Pandora</b>, the great opera house where the elite gather nearly every night, and where the matriarch sings the empire's victories. <b>The Rose</b>, an elites-only establishment that openly doubles as an intelligence trading post. And the bulletins, which print the version of events most Oceanians believe.</p>" }
@@ -818,7 +819,7 @@ function plain(html){ const d = document.createElement("div"); d.innerHTML = htm
 const view = document.getElementById("view");
 
 const CREDIT = { world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
-const BANNER_CAP = { cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "The Pandora on a performance night.", council: "City Hall, the Citadel, where the council meets." };
+const BANNER_CAP = { cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "Arrivals at the Pandora on a performance night. The matriarch sang the Greymarch victory to a full house; officers' carriages were turned away at the corner for want of room.", council: "City Hall, the Citadel, where the council meets." };
 const HEADLINES = {
   cataclysm: ["Half of Solis Goes to War; the Sky Does Not Return", "Every surviving nation agrees on how it ended. None of them agree on how it began."],
   eurasia: ["Crown and Altar Endure a Thousandth Winter", "The realm that came through the fire intact credits Providence, and its geothermal vents."],
