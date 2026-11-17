@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Solis Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Old+Standard+TT:ital,wght@0,400;0,700;1,400&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Aged broadsheet: yellowed newsprint sheet on a darker table, black ink, double rules, halftone photos; one red ink for stamps and restricted files. Layout: masthead, multi-column front page bands, inside pages with column text + fact sidebar. */
+  --table: #cfc5b0;
+  --paper: #efe7d5;
+  --paper2: #e6dcc6;
+  --ink: #1d1a16;
+  --muted: #5b5348;
+  --rule: #2a251f;
+  --hair: rgba(29,26,22,.28);
+  --red: #a3261d;
+  --f-mast: "UnifrakturMaguntia", "Old English Text MT", serif;
+  --f-head: "Old Standard TT", "Georgia", serif;
+  --f-body: "Libre Caslon Text", "Georgia", serif;
+  --f-mono: "IBM Plex Mono", "Courier New", monospace;
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.3  0 0 0 0 0.25  0 0 0 0 0.18  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--table); color: var(--ink); font: 400 16px/1.6 var(--f-body); }
+a { color: var(--ink); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--red); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+::selection { background: var(--ink); color: var(--paper); }
+
+/* ---------- Section strip (sticky) ---------- */
+.strip { position: sticky; top: 0; z-index: 30; background: var(--ink); color: var(--paper); }
+.strip .inner { max-width: 1240px; margin: 0 auto; padding: 6px 16px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.strip .home { font: 400 20px/1 var(--f-mast); color: var(--paper); text-decoration: none; }
+.strip nav { display: flex; flex-wrap: wrap; gap: 0; margin-right: auto; }
+.strip nav a, .strip nav button { font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: #e9e1cf; text-decoration: none; padding: 7px 10px; background: none; border: 0; cursor: pointer; }
+.strip nav a:hover, .strip nav button:hover { color: #fff; text-decoration: underline; }
+.search { position: relative; }
+.search input { font: 14px var(--f-body); padding: 5px 10px; width: 210px; max-width: 60vw; border: 1px solid #6b6255; background: #2b2722; color: #f3ecdc; border-radius: 2px; }
+.search input::placeholder { color: #a99f8e; }
+.search ul { position: absolute; right: 0; top: calc(100% + 4px); width: 320px; max-width: 86vw; list-style: none; margin: 0; padding: 4px; background: var(--paper); border: 1px solid var(--rule); box-shadow: 0 12px 30px rgba(0,0,0,.25); display: none; color: var(--ink); }
+.search ul.open { display: block; }
+.search li a { display: block; padding: 7px 10px; text-decoration: none; color: var(--ink); }
+.search li a:hover, .search li a.active { background: var(--paper2); }
+.search li small { display: block; color: var(--muted); font: 11px var(--f-mono); text-transform: uppercase; }
+.menu-btn { display: none; margin-left: auto; font: 500 12px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; background: none; border: 1px solid #6b6255; padding: 6px 10px; cursor: pointer; color: var(--paper); }
+
+/* ---------- Sheet ---------- */
+.sheet { max-width: 1240px; margin: 18px auto 40px; background: var(--paper); padding: 22px clamp(14px, 3vw, 36px) 30px; position: relative; box-shadow: 0 2px 0 rgba(0,0,0,.05), 0 14px 40px rgba(60,45,25,.25); background-image: var(--grain), radial-gradient(ellipse at 50% 40%, rgba(255,250,235,.6), rgba(205,185,145,.25) 100%); }
+
+/* ---------- Masthead ---------- */
+.masthead { text-align: center; }
+.masthead .ears { display: flex; justify-content: space-between; gap: 16px; align-items: stretch; }
+.ear { width: 190px; border: 1px solid var(--rule); padding: 6px 10px; font: 500 11px/1.45 var(--f-mono); text-transform: uppercase; letter-spacing: .04em; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 2px; }
+.ear b { font: 700 15px var(--f-head); text-transform: none; letter-spacing: 0; }
+.masthead h1 { font: 400 clamp(46px, 9vw, 112px)/1 var(--f-mast); margin: 2px 0 0; flex: 1; align-self: center; }
+.masthead h1 a { text-decoration: none; color: inherit; }
+.masthead .motto { font: italic 15px var(--f-head); margin: 4px 0 10px; color: var(--muted); }
+.dateline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 16px; border-top: 3px double var(--rule); border-bottom: 3px double var(--rule); padding: 5px 2px; font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; }
+.masthead.small { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-bottom: 3px double var(--rule); padding-bottom: 6px; text-align: left; }
+.masthead.small h1 { font-size: clamp(32px, 5vw, 46px); flex: none; }
+.masthead.small .dl { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+
+/* ---------- Type ---------- */
+.kicker { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.kicker .r { color: var(--red); }
+.hl { font: 700 clamp(30px, 3.4vw, 46px)/1.02 var(--f-head); margin: 4px 0 6px; letter-spacing: -.01em; }
+.hl a { text-decoration: none; }
+.hl a:hover { text-decoration: underline; color: inherit; }
+.hl.xl { font-size: clamp(38px, 5.4vw, 72px); line-height: .98; }
+.hl.sm { font-size: 23px; line-height: 1.08; }
+.deck { font: italic 18px/1.35 var(--f-head); margin: 0 0 8px; color: #3a342c; }
+.byline { font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair); padding: 4px 0; margin: 8px 0 12px; }
+.cols { columns: 3 210px; column-gap: 26px; column-rule: 1px solid var(--hair); }
+.cols.two { columns: 2 240px; }
+.cols p, .text p { margin: 0 0 .75em; text-align: justify; hyphens: auto; -webkit-hyphens: auto; }
+.cols > p:first-of-type::first-letter { font: 700 3.3em/.82 var(--f-head); float: left; padding: 4px 6px 0 0; }
+.more { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; }
+.rule { border: 0; border-top: 1px solid var(--rule); margin: 18px 0; }
+.rule.double { border-top: 3px double var(--rule); }
+.rule.thick { border-top: 4px solid var(--rule); }
+
+/* ---------- Photos (halftone) ---------- */
+figure { margin: 0 0 12px; }
+.art { position: relative; background: #b8ad97; overflow: hidden; border: 1px solid var(--rule); }
+.art canvas, .art img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover; filter: grayscale(1) sepia(.18) contrast(1.18) brightness(.97); }
+.art::after { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(20,16,10,.45) .9px, transparent 1.3px), var(--grain); background-size: 3px 3px, 200px 200px; mix-blend-mode: multiply; opacity: .45; }
+figcaption { font: italic 13.5px/1.4 var(--f-head); color: #3a342c; padding-top: 5px; border-bottom: 1px solid var(--hair); padding-bottom: 6px; }
+figcaption .credit { font: 500 10.5px var(--f-mono); font-style: normal; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); float: right; margin-left: 8px; }
+.ar-wide { aspect-ratio: 16 / 9; } .ar-photo { aspect-ratio: 3 / 2; } .ar-sq { aspect-ratio: 4 / 3; } .ar-port { aspect-ratio: 3 / 4; }
+
+/* ---------- Front page ---------- */
+.front { display: grid; grid-template-columns: minmax(0, 2.3fr) minmax(0, 1fr); gap: 28px; margin-top: 18px; }
+.front .side { border-left: 1px solid var(--rule); padding-left: 24px; }
+.box { border: 1px solid var(--rule); padding: 12px 14px; margin-bottom: 16px; background: rgba(255,250,238,.35); }
+.box h3 { font: 700 13px var(--f-mono); text-transform: uppercase; letter-spacing: .12em; margin: 0 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--rule); text-align: center; }
+.box ul { margin: 0; padding-left: 1.05em; font-size: 15px; }
+.box li { margin-bottom: .55em; }
+.box.notice { text-align: center; font-size: 14.5px; }
+.box.notice b { font: 700 19px var(--f-head); display: block; margin-bottom: 4px; }
+.box.notice .redact { display: inline-block; margin: 2px 0; }
+.band { display: grid; gap: 26px; }
+.band.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.band.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.band.two { grid-template-columns: 1.4fr 1fr; }
+.band > article + article { border-left: 1px solid var(--hair); padding-left: 26px; }
+.band article p { margin: 0 0 .7em; text-align: justify; hyphens: auto; font-size: 15.5px; }
+.letters h4 { font: 700 18px/1.2 var(--f-head); margin: 12px 0 2px; }
+.letters h4::before { content: "Q. "; color: var(--muted); }
+.letters p { margin: 0 0 8px; font-size: 15px; }
+.letters p::before { content: "A. "; font-weight: 700; }
+.letters .from { font: italic 13px var(--f-head); color: var(--muted); margin-bottom: 4px; }
+.truths blockquote { margin: 0 0 14px; border-left: 3px solid var(--rule); padding-left: 14px; }
+.truths blockquote p { font: italic 700 26px/1.15 var(--f-head); margin: 0 0 4px; }
+.truths cite { font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; font-style: normal; color: var(--muted); }
+
+/* ---------- Inside page ---------- */
+.rec-top { position: relative; padding-top: 14px; }
+.stamp-mark { position: absolute; right: 0; top: 18px; font: 500 15px var(--f-mono); letter-spacing: .24em; text-transform: uppercase; color: var(--red); border: 3px solid var(--red); padding: 6px 12px; transform: rotate(-7deg); opacity: .82; mix-blend-mode: multiply; }
+.banner { display: flex; gap: 12px; border: 1px solid var(--rule); border-left: 5px solid var(--bc, var(--rule)); padding: 8px 12px; margin: 8px 0 14px; font-size: 15px; background: rgba(255,250,238,.4); }
+.banner b { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .08em; color: var(--bc, var(--ink)); white-space: nowrap; padding-top: 2px; }
+.banner.danger { --bc: var(--red); }
+.rec-grid { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 28px; margin-top: 8px; }
+.rec-side { border-left: 1px solid var(--rule); padding-left: 22px; }
+.text { font-size: 16.5px; }
+.text .lead { font-size: 18.5px; line-height: 1.55; }
+.text h2 { font: 700 23px/1.1 var(--f-head); margin: 14px 0 6px; padding-top: 8px; border-top: 1px solid var(--rule); break-after: avoid; scroll-margin-top: 60px; }
+.text h3 { font: 500 11.5px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; margin: 12px 0 4px; break-after: avoid; }
+.text ul { padding-left: 1.1em; margin: 0 0 .8em; }
+.text li { margin-bottom: .35em; }
+.table-wrap { overflow-x: auto; break-inside: avoid; }
+.text table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin: 4px 0 12px; }
+.text th, .text td { border-bottom: 1px solid var(--hair); padding: 5px 8px 5px 0; text-align: left; vertical-align: top; }
+.text th { font: 500 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.hatnote { font: italic 16px var(--f-head); color: #3a342c; margin: 0 0 6px; }
+.infobox { border: 2px solid var(--rule); background: rgba(255,250,238,.45); margin-bottom: 18px; font-size: 14px; }
+.infobox .ititle { font: 700 13px var(--f-mono); text-transform: uppercase; letter-spacing: .12em; text-align: center; padding: 7px 8px; background: var(--ink); color: var(--paper); }
+.infobox figure { margin: 0; padding: 10px 10px 0; }
+.infobox .art { aspect-ratio: 4 / 3; }
+.infobox .art.portrait { aspect-ratio: 3 / 4; }
+.infobox .art.natural { aspect-ratio: auto; }
+.infobox .art.natural img { position: static; height: auto; }
+.infobox figcaption { border: 0; }
+.infobox table { width: 100%; border-collapse: collapse; }
+.infobox th { text-align: left; font: 500 10.5px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 7px 6px 7px 12px; vertical-align: top; width: 40%; }
+.infobox td { padding: 7px 12px 7px 0; vertical-align: top; line-height: 1.4; }
+.infobox tr th, .infobox tr td { border-top: 1px solid var(--hair); }
+.contents ol { margin: 0; padding-left: 1.4em; font-size: 15px; }
+.contents button { background: none; border: 0; padding: 1px 0; cursor: pointer; text-align: left; text-decoration: underline; text-decoration-color: var(--hair); text-underline-offset: 3px; font-size: 15px; }
+.contents button:hover { color: var(--red); }
+.related a { display: grid; grid-template-columns: 84px 1fr; gap: 10px; align-items: center; text-decoration: none; padding: 7px 0; border-top: 1px solid var(--hair); }
+.related a:first-child { border-top: 0; }
+.related .art { aspect-ratio: 4 / 3; }
+.related b { font: 700 16px/1.15 var(--f-head); }
+.related a:hover b { text-decoration: underline; }
+sup.fn { line-height: 0; font-size: .7em; }
+sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; font: 500 1em var(--f-mono); color: var(--red); }
+.notes { margin-top: 18px; border-top: 3px double var(--rule); padding-top: 8px; }
+.notes h2 { font: 700 13px var(--f-mono); text-transform: uppercase; letter-spacing: .12em; margin: 0 0 8px; }
+.notes ol { columns: 2 260px; column-gap: 26px; padding-left: 1.6em; margin: 0; font-size: 13.5px; line-height: 1.5; }
+.notes li { break-inside: avoid; margin-bottom: .5em; padding: 2px 4px; transition: background .5s; }
+.notes li.flash { background: rgba(163,38,29,.14); }
+.notes .back { background: none; border: 0; cursor: pointer; padding: 0 4px 0 0; color: var(--red); font-size: 13px; }
+.tip { position: absolute; z-index: 60; max-width: 340px; background: var(--paper); border: 1px solid var(--rule); box-shadow: 0 10px 30px rgba(60,45,25,.35); padding: 10px 12px; font-size: 14px; line-height: 1.5; pointer-events: none; }
+.redact { background: var(--ink); color: transparent; cursor: pointer; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; user-select: none; }
+.redact.open { background: rgba(163,38,29,.18); color: inherit; user-select: text; cursor: default; }
+.restricted { border: 2px dashed var(--red); padding: 10px 12px; margin: 6px 0 12px; break-inside: avoid; background: repeating-linear-gradient(135deg, rgba(163,38,29,.05) 0 10px, transparent 10px 20px); }
+.restricted .gate { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; font: 500 11px var(--f-mono); color: var(--red); letter-spacing: .06em; }
+.restricted .gate button { font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--paper); background: var(--red); border: 0; padding: 6px 10px; cursor: pointer; }
+.restricted .body { margin-top: 8px; }
+.restricted .body[hidden] { display: none; }
+.amended { font: 500 11px var(--f-mono); color: var(--muted); margin-top: 12px; text-transform: uppercase; letter-spacing: .06em; }
+
+/* ---------- Classifieds (index) ---------- */
+.classifieds { columns: 3 240px; column-gap: 22px; column-rule: 1px solid var(--hair); margin-top: 10px; }
+.classifieds h2 { font: 700 13px var(--f-mono); text-transform: uppercase; letter-spacing: .14em; text-align: center; background: var(--ink); color: var(--paper); padding: 5px; margin: 0 0 10px; break-after: avoid; }
+.listing { break-inside: avoid; border: 1px solid var(--rule); padding: 8px 10px; margin-bottom: 10px; display: block; text-decoration: none; }
+.listing b { font: 700 18px/1.1 var(--f-head); display: block; }
+.listing small { font: 500 10.5px var(--f-mono); text-transform: uppercase; color: var(--muted); }
+.listing span { display: block; font-size: 14px; margin-top: 4px; }
+.listing:hover { background: rgba(255,250,238,.6); }
+.listing:hover b { text-decoration: underline; }
+
+/* ---------- Imprint ---------- */
+.imprint { margin-top: 26px; border-top: 4px solid var(--rule); padding-top: 10px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; font: 500 11px var(--f-mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.imprint nav { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.imprint a { color: var(--ink); text-decoration: none; }
+.imprint a:hover { text-decoration: underline; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1000px) {
+  .band.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .band.four > article:nth-child(3) { border-left: 0; padding-left: 0; }
+}
+@media (max-width: 860px) {
+  .front, .rec-grid, .band.three, .band.two { grid-template-columns: 1fr; }
+  .front .side, .rec-side { border-left: 0; padding-left: 0; border-top: 3px double var(--rule); padding-top: 14px; }
+  .band > article + article { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 14px; }
+  .ear { display: none; }
+  .menu-btn { display: inline-block; }
+  .strip nav, .strip .search { display: none; width: 100%; order: 3; }
+  .strip.open nav { display: grid; grid-template-columns: 1fr 1fr; }
+  .strip.open .search { display: block; order: 4; padding-bottom: 6px; }
+  .strip.open .search input { width: 100%; max-width: none; }
+  .stamp-mark { position: static; display: inline-block; margin: 6px 0; }
+  .sheet { margin-top: 0; }
+}
+@media (max-width: 560px) {
+  .band.four { grid-template-columns: 1fr; }
+  .band.four > article + article { border-left: 0; padding-left: 0; border-top: 1px solid var(--rule); padding-top: 14px; }
+  .cols, .cols.two { columns: 1; }
+}
+.art.natural { aspect-ratio: auto; }
+.art.natural img { position: static; height: auto; }
+.rec-main .art.natural { width: fit-content; max-width: 100%; margin: 0 auto; }
+.rec-main .art.natural img { max-height: 85vh; width: auto; max-width: 100%; height: auto; }
+.rec-main figure:has(.art.natural) figcaption { max-width: 100%; }
+</style>
+</head>
+<body>
+
+<header class="strip" id="topbar">
+  <div class="inner">
+    <a class="home" href="#home">The Solis Archive</a>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="topnav">Sections</button>
+    <nav id="topnav" aria-label="Sections">
+      <a href="#cataclysm">History</a>
+      <a href="#eurasia">Eurasia</a>
+      <a href="#oceania">Oceania</a>
+      <a href="#council">The Council</a>
+      <a href="#records">All records</a>
+      <button type="button" data-random>Random</button>
+    </nav>
+    <div class="search">
+      <label for="q" style="position:absolute;left:-9999px">Search the archive</label>
+      <input id="q" type="search" placeholder="Search the archive" autocomplete="off">
+      <ul id="results" role="listbox" aria-label="Search results"></ul>
+    </div>
+  </div>
+</header>
+
+<main id="view"></main>
+<div class="tip" id="tip" hidden></div>
+<script>
+/* ===================================================================
+   YOUR OWN ART: put image files in an "images" folder next to this
+   file and list them here. Any key left out is drawn automatically.
+   Keys: world, eurasia, oceania, novagrad, dominions, nordheim, ivory,
+   furnace, citadel, greymarch, ruin, opera, ships, domes, harrow,
+   ashgate, council, insignia-3, insignia-4, insignia-5, insignia-6,
+   insignia-8, insignia-9, footer
+   Example:  oceania: "images/oceania.jpg",
+   =================================================================== */
+const ART = {
+  eurasia: "images/eurasia.jpg",
+  oceania: "images/oceania.jpg",
+  "insignia-4": "images/edmund.png",
+  "thumb-edmund": "images/edmund-face.webp",
+  "insignia-5": "images/tzadik.png",
+  "insignia-6": "images/melvyn.png",
+  "insignia-3": "images/noctis.png",
+  ivory: "images/ivory.jpg",
+  novagrad: "images/novagrad.jpg",
+  "thumb-noctis": "images/noctis-face.webp",
+  "thumb-tzadik": "images/tzadik-face.webp",
+  "thumb-melvyn": "images/melvyn-face.webp",
+};
+/* Scenes with no image of their own reuse one of the main four, each with its own crop. */
+const POS = { "insignia-4": "55% 30%", "insignia-5": "50% 30%", "insignia-6": "52% 28%" };
+const REUSE = {
+  footer: ["world", "50% 70%"], ivory: ["world", "20% 40%"], nordheim: ["world", "80% 50%"], dominions: ["world", "60% 30%"], greymarch: ["world", "30% 60%"],
+  citadel: ["oceania", "50% 25%"], council: ["oceania", "40% 20%"], furnace: ["oceania", "85% 30%"], ships: ["oceania", "75% 80%"], opera: ["oceania", "15% 50%"],
+  domes: ["eurasia", "20% 25%"]
+};
+
+/* ===================== RECORDS ===================== */
+const CATS = ["History", "Nations", "People", "Institutions", "Places"];
+
+const R = [
+{
+id: "cataclysm", title: "The Cataclysm", cat: "History", acc: "HI-001", status: "Open",
+lead: "<p>The <b>Cataclysm</b> was a nuclear war fought in the early 19th century. It drew in roughly half of [[solis|Solis]][^1] and ended what survivors now call the old world. Every nation in existence today is defined by how it endured the decades that followed.</p>",
+info: { art: "world", caption: "The world after: snow, ruin, and a sun that barely rises.", rows: [["Type","Nuclear war"],["Date","Early 19th century"],["Belligerents","Roughly half of Solis[^1]"],["Cause","Disputed[^2]"],["Outcome","Collapse of the old world; permanent winter"]] },
+sections: [
+{ h: "Origins", html: "<p>No surviving account agrees on how the war began or who struck first.[^2] Each nation teaches its own version, and most of the records that could have settled the question burned with the cities that kept them.[^3]</p>" },
+{ h: "The Long Winter", html: "<p>After the war the sky darkened and stayed dark.[^4] Snow fell and never fully melted. Across most of Solis daylight shrank to a few dim hours, harvests failed, and blizzards made open travel deadly. Some regions were poisoned outright, among them the far north of what is now [[oceania|Oceania]], where the sun never rises at all.[^5]</p><p>The winter never ended. Perpetual snow, scarce light and cold are the permanent condition of Solis, and every surviving society is organised around getting warmth, light and food.</p>" },
+{ h: "Survival", html: "<p>Survival was not shared equally. Geography, resources, and whatever institutions a nation still possessed decided who rebuilt and who was swallowed.</p><ul><li><b>[[eurasia|Eurasia]]</b> came through with its throne, Church and noble houses intact, warmed by geothermal vents beneath its cities. It took its survival as proof of divine favour.</li><li><b>[[oceania|Oceania]]</b> was dealt the worst hand of any nation. It was forged from conquered peoples by force, and stripped away everything that did not keep people alive, God included.</li><li><b>[[southern-dominions|The Southern Dominions]]</b> became the breadbasket of a starving world.</li><li><b>[[nordheim|Nordheim]]</b> sealed itself off and turned to zealotry.</li><li><b>[[novagrad|Novagrad]]</b> rose later, from the ruins of a conquered kingdom, and has refused to fall ever since.</li></ul>" },
+{ h: "Legacy", html: "<p>Generations on, the surviving powers have rebuilt to roughly the technology of a late-19th-century world: gaslight and scarce electricity, heated rail, wireless telegraphy, armoured dreadnoughts and diesel-electric submarines.</p><p>Both great empires built a founding story on the Cataclysm. Eurasia teaches that Providence spared the Crown. Oceania teaches that [[founding-myth|there was no other way]].[^6]</p>" }
+],
+notes: [
+"\"Half\" is the figure given in nearly every account, and the only point on which they all agree. <i>Archivist's note.</i>",
+"Eurasian clergy teach that the war was Providence's judgment on a faithless world. Oceanian schoolbooks do not discuss its causes at all.",
+"Source destroyed in the Cataclysm.",
+"\"The Long Winter\" is this archive's own term. No nation uses it officially.",
+"<i>The Vanguard</i>'s weather column has listed Ivory Edge as \"Not reported\" in every issue this archive holds.",
+"See [[founding-myth|There Was No Other Way]]. Possession of this archive's copy of that record is illegal in Oceania."
+],
+see: ["solis","founding-myth","eurasia","oceania"]
+},
+{
+id: "solis", title: "Solis", cat: "History", acc: "HI-002", status: "Open",
+lead: "<p><b>Solis</b> is the world. It has been known by that name since before the [[cataclysm|Cataclysm]], and nobody has changed it since, though it now sees a few hours of dim light a day.[^1]</p>",
+info: { art: "world", caption: "Solis, as it is.", rows: [["Climate","Permanent winter"],["Daylight","A few dim hours, less in the north"],["Technology","Roughly late 19th century"],["Great powers","Eurasia, Oceania"]] },
+sections: [
+{ h: "Nations", html: "<p>The following nations are known to this archive. Others certainly exist; the archive is incomplete.[^2]</p><div class=\"table-wrap\"><table><tr><th>Nation</th><th>Government</th><th>Relations</th></tr><tr><td>[[eurasia|Eurasia]]</td><td>Absolute hereditary monarchy</td><td>Cold war with Oceania</td></tr><tr><td>[[oceania|Oceania]]</td><td>Military dictatorship</td><td>At war on several fronts</td></tr><tr><td>[[southern-dominions|The Southern Dominions]]</td><td>Elected Trade Council</td><td>Trades with everyone</td></tr><tr><td>[[nordheim|Nordheim]]</td><td>Cult-state under the Seer</td><td>At war with Oceania</td></tr><tr><td>[[novagrad|Novagrad]]</td><td>Free city; citizens' assembly</td><td>At war with Oceania</td></tr><tr><td>[[redact:Withheld pending review]]</td><td>—</td><td>Defeated by Oceania some 25 years ago</td></tr></table></div>" }
+],
+notes: [
+"The name is generally regarded as either a joke or a prayer. Opinion divides along national lines.",
+"The archive is accepting testimony."
+],
+see: ["cataclysm"]
+},
+{
+id: "eurasia", title: "Eurasia", cat: "Nations", acc: "NA-001", status: "Open", accent: "eu",
+lead: "<p><b>Eurasia</b> is a hereditary monarchy with more than a thousand years of unbroken history, built on the union of Crown and Altar. It survived the [[cataclysm|Cataclysm]] with its institutions intact and is locked in a long cold war with [[oceania|Oceania]]. It projects power through cathedral grandeur at home and silent steel beneath the waves abroad.</p>",
+info: { art: "eurasia", caption: "The Capital at dusk, as seen from the terraces.", rows: [["Government","Absolute hereditary monarchy"],["Head of state","The Sovereign"],["Advisers","Council of nobles, admirals and senior clergy"],["Capital","\"The Capital\"[^1]"],["Religion","The state Church"],["Age","Over a thousand years"],["Strength","The Imperial Navy"]] },
+sections: [
+{ h: "Government", html: "<h3>The Sovereign</h3><p>Eurasia is ruled by the Sovereign, regarded not merely as head of state but as a divinely ordained figure chosen by Providence. The Sovereign's authority is absolute.</p><h3>The Council</h3><p>The Sovereign is advised by an ancient council of high-ranking nobles, admirals and senior clergy. Power flows through proximity to the Crown.</p>" },
+{ h: "Society", html: "<h3>Nobility and the common-born</h3><p>Bloodline and closeness to the Crown decide privilege, and the line between the aristocracy and the common-born is rarely crossed.</p><h3>The Church</h3><p>Religion is inseparable from state power. The Church sanctifies the Sovereign's rule, blesses the launch of every warship, and controls the major cultural and educational institutions. Exceptional talent is framed by the clergy as a <i>mark of Providence</i>, a blessing that falls most readily on the children of noble houses.[^2]</p><h3>High art</h3><p>Music is treated as sacred lineage. Noble prodigies are presented before dukes, admirals and bishops as proof of divine favour, while common-born musicians may spend decades fighting for a seat in an orchestra pit.[^3]</p><h3>Dress</h3><p>Pre-war court regalia (powdered wigs, velvet, brocade) survives as ceremonial dress, worn only at court and on high occasions. In daily life Eurasians of every class wear late-19th-century fashion. Wearing regalia outside its setting marks one as a show-off or hopelessly old-fashioned.</p>" },
+{ h: "Military", html: "<p>Beneath the pomp, Eurasia commands a modern navy: diesel-electric U-boats, armoured dreadnoughts and encrypted wireless networks. It prefers shadow warfare to invasion: blockades, covert submarine reconnaissance, and funding the enemies of its rivals.[^4]</p>" },
+{ h: "Foreign relations", html: "<p>Eurasia and Oceania have fought openly in the past, most recently some eight years ago, when Eurasia allied with [[nordheim|Nordheim]] against Oceania. Today there is no declared war, only espionage, sabotage and deniable clashes. Eurasia trades closely with [[southern-dominions|the Southern Dominions]] and quietly funds Oceania's enemies, [[novagrad|Novagrad]] among them.</p><p>Eurasians regard Oceania as godless and rootless, a nation built from ruins, and pity it as much as they fear it.[^5]</p>" },
+{ h: "Places", html: "<p>See [[places-eurasia|Places of Eurasia]].</p>" }
+],
+notes: [
+"<i>The Crown &amp; Altar Gazette</i> refers to it only as \"the Capital\", as if there could be no other. The archive has not found its proper name in any document.",
+"Sermon for the season, Cathedral pulpit. The clergy did not respond to the archive's question of why Providence so rarely favours the poor.",
+"The Royal Conservatory's posted notice states that its standards \"are not lowered for the eagerness of the common-born.\"",
+"The Admiralty has called reports of submarines in Oceania's southern shipping lanes \"fanciful\". The archive has no reason to believe the denial.",
+"Clergy preach that Oceania's suffering is the natural fate of a people who turned from Providence."
+],
+see: ["places-eurasia","oceania","founding-myth"]
+},
+{
+id: "oceania", title: "Oceania", cat: "Nations", acc: "NA-002", status: "Open", accent: "oc",
+lead: "<p><b>Oceania</b> is a survivalist empire forged from conquered peoples after the [[cataclysm|Cataclysm]]. Military rank is social rank, every citizen is conscripted at twelve, and God was the first thing it abandoned. It is at war on several fronts at once and, to the irritation of everyone, keeps winning.</p>",
+info: { art: "oceania", caption: "The Citadel under blizzard.", rows: [["Government","Military dictatorship[^1]"],["Head of state","The Emperor, styled Chief General"],["Council","[[council|The Council of Nine]]"],["Capital","The Citadel"],["Religion","None; no churches or gatherings"],["Conscription","From age twelve"],["State slogan","\"Strength is earned. Nothing is given.\"[^2]"]] },
+sections: [
+{ h: "Origins", html: "<p>Oceania was dealt the worst hand of any nation: perpetual snow, a few hours of dim light a day, and nothing to eat. It was assembled by force from the peoples it conquered, and it teaches that [[founding-myth|there was no other way]] to survive.</p>" },
+{ h: "Government", html: "<p>The Emperor, also called the Chief General, holds absolute power. The nine Generals form [[council|his council]], each overseeing a division of the military such as intelligence, engineering or bioengineering, though warfare always comes first.</p>" },
+{ h: "Rank and society", html: "<p>Officially, a person's worth is measured by military achievement rather than wealth or family. Rank brings better food, better housing and personal aides. Failure in battle can mean demotion, exile or execution.</p><p>In practice, money and family names open doors. Several of the council's younger Generals owe much of their rise to powerful houses and fathers; others are genuine war heroes.[^3]</p><h3>Women</h3><p>Women enlist and served heavily in every war, in uniform, in the factories and in intelligence. Yet the high command is almost entirely male, and for many women the surest route to status runs through marriage to an officer. See [[adc|the ADC Program]].</p>" },
+{ h: "Religion", html: "<p>Oceania has no churches, no clergy, and forbids religious gatherings of any kind. Faith is not punished by death; it simply has no place. Private belief survives in small, tolerated ways: a cross kept as an heirloom or good-luck charm, an old prayer at home. Many Oceanians still swear by God out of habit.[^4]</p>" },
+{ h: "Great houses", html: "<p>Two houses wield power that rank alone cannot explain: [[house-cressida|House Cressida]], which funds roughly 40% of the military, and [[house-sylvian|House Sylvian]], which controls intelligence, entertainment and propaganda.</p>" },
+{ h: "Infrastructure", html: "<p>Electricity is scarce. The Citadel has it constantly and the Furnace District nearly so; everywhere else runs on rotation. Underground tunnels and heated pathways link the major cities against the cold.</p>" },
+{ h: "Prisoners of war", html: "<p>Prisoners of war are treated harshly, and are often forced into slavery, hard labour or prostitution. Persons of interest are processed at Harrow Station.[^5]</p>" },
+{ h: "Wars", html: "<ul><li><b>[[novagrad|Novagrad]]</b>: a small free city that should have fallen years ago.</li><li><b>[[southern-dominions|The Southern Dominion]]</b>: hostilities continue, though trade by sea still flows.</li><li><b>[[nordheim|Nordheim]]</b>: zealots who prophesy Oceania's destruction.</li><li><b>[[eurasia|Eurasia]]</b>: a cold war, after open fighting in the past.</li></ul><p><i>The Vanguard</i> reports all fronts as holding.[^6]</p>" },
+{ h: "Places", html: "<p>See [[places-oceania|Places of Oceania]].</p>" }
+],
+notes: [
+"The archive uses this description for want of a better one. Oceania does not describe its own government; it simply is one.",
+"As printed on the masthead of <i>The Vanguard</i>, official organ of the General Staff.",
+"See [[council|The Council of Nine]]. A bakery cashier in the Citadel reports that the Fifth General can barely afford bread, which suggests that at least one of them did not buy his way in.",
+"At least two members of the Oceanian elite wear crosses openly. No one has reported them.",
+"See [[places-oceania|Places of Oceania]]. Rumours that some who pass through Harrow Station do not appear on any record have not been investigated.",
+"It has reported this every day for which the archive holds a copy."
+],
+see: ["council","founding-myth","places-oceania","adc","house-cressida","house-sylvian"]
+},
+{
+id: "founding-myth", title: "There Was No Other Way", cat: "History", acc: "HI-003", status: "Restricted", accent: "oc",
+banner: ["danger","Banned material","This record discusses material banned in Oceania. Possession is a matter for Harrow Station."],
+lead: "<p><b>\"There was no other way\"</b> is the founding doctrine of [[oceania|Oceania]]: the belief that surviving the [[cataclysm|Cataclysm]] required everything Oceania became. It is taught to every child before conscription and repeated in every bulletin.[^1]</p>",
+info: { art: "citadel", caption: "A doctrine printed daily.", rows: [["Type","State doctrine"],["Taught","From childhood"],["Enforced by","Censorship; Harrow Station"],["Authored by","[[redact:Largely House Sylvian]]"],["Disproved by","[[redact:Novagrad]]"]] },
+sections: [
+{ h: "The doctrine", html: "<p>The official account holds that the cold, the hunger and the conquered peoples left Oceania no choice. Conscription at twelve, rank as worth, the end of the churches and absolute obedience were not decisions but necessities. Anything softer, the doctrine says, would have died in the snow.</p>" },
+{ h: "What is banned", html: "<ul><li>Histories of the first years after the Cataclysm, before the official account was written.[^2]</li><li>Foreign accounts of how other nations survived.</li><li>Anything printed in or about [[novagrad|Novagrad]].</li></ul>" },
+{ restricted: true, h: "The archive's assessment", html: "<p>The founders of Oceania were not masterminds. They were frightened and ignorant, and they did what worked in the moment. The story of necessity was written afterward, largely by [[house-sylvian|House Sylvian]], so that no one would ever ask whether it had to be this way.</p><p>It did not. [[novagrad|Novagrad]] shares Oceania's cold, ruins and hunger, and survived without becoming what Oceania became. That is why Oceania will not stop until it falls.[^3]</p>" }
+],
+notes: [
+"A former conscript, interviewed in Ashgate, recited it from memory and then asked the archive not to print his name.",
+"The archive's copy of one such history is missing its first forty pages. They appear to have been removed with a knife.",
+"Compare the Gazette's position: that Eurasia's survival proves Providence. Each empire's founding story requires the other to be wrong."
+],
+see: ["oceania","novagrad","house-sylvian","cataclysm"]
+},
+{
+id: "council", title: "The Council of Nine", cat: "Institutions", acc: "IN-001", status: "Open", accent: "oc",
+lead: "<p>The <b>Council of Nine</b> is the body of Generals who advise the Emperor of [[oceania|Oceania]]. Each General commands a division of the military. Together they are the most powerful people in the empire after the Emperor himself.</p>",
+info: { art: "council", caption: "City Hall, the Citadel, where the council meets.", rows: [["Convened by","The Emperor"],["Seat","City Hall, the Citadel"],["Members","Nine Generals"],["Open records","Six"]] },
+sections: [
+{ h: "Members", html: "<div class=\"table-wrap\"><table><tr><th>Seat</th><th>General</th><th>Known for</th></tr><tr><td>First</td><td colspan=\"2\"><i>Record sealed</i>[^1]</td></tr><tr><td>Second</td><td colspan=\"2\"><i>Record sealed</i></td></tr><tr><td>Third</td><td>[[noctis|Noctis]]</td><td>The Night Raiders; Ivory Edge</td></tr><tr><td>Fourth</td><td>[[edmund|Edmund Quinnell]]</td><td>Three centuries of Quinnell service</td></tr><tr><td>Fifth</td><td>[[tzadik|Tzadik Kain]]</td><td>Hero of Greymarch Pass</td></tr><tr><td>Sixth</td><td>[[melvyn|Melvyn]]</td><td>Traitor-hunting; \"complications\"</td></tr><tr><td>Seventh</td><td colspan=\"2\"><i>Record sealed</i></td></tr><tr><td>Eighth</td><td>[[lysander|Lysander Thorne]]</td><td>Youngest General</td></tr><tr><td>Ninth</td><td>[[ansel|Ansel Sylvian]]</td><td>Punitive operations; the black seal</td></tr></table></div>" },
+{ h: "Composition", html: "<p>Every known member of the council is a man. The older Generals tend to be career soldiers from military families; several of the younger ones rose with the help of powerful houses or fathers.[^2] Two, the Fourth and the Fifth, are regarded even by their rivals as genuine war heroes.</p>" },
+{ h: "Known frictions", html: "<ul><li>The Eighth General once punched the Sixth during a meeting, over a remark about the Eighth's father.[^3]</li><li>The Fourth General is widely believed to suspect the Third of something. He has never said what in public.</li><li>The Ninth General throws the council's parties. Attendance is high and enthusiasm is mixed.</li></ul>" }
+],
+notes: [
+"The archive holds no open records for the First, Second and Seventh seats. This is either an oversight or the point.",
+"The Ninth General is a Sylvian, the Sixth was raised by House Cressida, and the Eighth's rank is a clause in his father's treaty.",
+"Witnesses agree that the Sixth General started it and did not regret it."
+],
+see: ["noctis","edmund","tzadik","melvyn","lysander","ansel"]
+},
+{
+id: "noctis", title: "Noctis", cat: "People", acc: "PE-003", status: "Restricted", accent: "oc",
+hat: "Third General of Oceania. Not to be confused with any human being, according to most of the people interviewed.",
+lead: "<p><b>Noctis</b> is the Third General of [[oceania|Oceania]] and commander of the Night Raiders, an army of three thousand that has never lost a battle. He is called <i>the Devil</i>, sincerely and without irony.</p>",
+info: { art: "insignia-3", caption: "Insignia of the Third seat.", pcap: "The only known photograph of the Third General, taken on the walls of Ivory Edge during the visit of an envoy from the Emperor. The envoy's report does not mention it. Photographer unknown.[^4]", rows: [["Seat","Third General"],["Age","Appears twenty; estimated fifty[^1]"],["Height","5'4\""],["Command","The Night Raiders (3,000)"],["Base","Ivory Edge"],["Origin","Unknown"]] },
+sections: [
+{ h: "Appearance", html: "<p>White hair, silver eyes, skin pale as snow and permanently cold to the touch. Sharp teeth, two prominent fangs. He smiles at the wrong moments, and especially when furious.</p>" },
+{ h: "History", html: "<p>Some twenty-five years ago, when Oceania was losing a war against [[redact:a nation withheld pending review]],[^2] a stranger appeared with an army at his back and offered to turn the tide in exchange for authority in the military. The Emperor accepted. After the war was won, Noctis was made Third General. He has not aged a day since.</p>" },
+{ h: "Rumours", html: "<p>That he is an entity the Emperor freed from an ancient imprisonment. That he was found beneath the ice. That the deal was a blood pact. That no one sent to Ivory Edge returns alive.[^3] The details shift with the teller; the core does not.</p><p>No one can explain why a man who bows to no one obeys the Emperor. He drags his feet and makes a spectacle of his displeasure, but he goes.</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>The prevailing theory is that the Emperor holds something over him. The archive's sources suggest the opposite: that the Emperor gave him something no one else ever did.</p><p>He fears being contained again, being reduced to something kept. He does not experience this as fear. He experiences it as rage, immediate and out of all proportion.</p>" },
+{ h: "Relationships", html: "<ul><li>[[edmund|Edmund Quinnell]] is certain Noctis was involved in the death of his brother. He has no evidence.</li><li>[[ansel|Ansel Sylvian]] is the one man he cannot frighten, which he finds off-putting.</li><li>[[tzadik|Tzadik Kain]] is increasingly convinced he is not human and runs on spite.</li><li>[[melvyn|Melvyn]] would like to visit Ivory Edge someday.</li></ul>" }
+],
+notes: [
+"Every officer the archive interviewed declined to estimate his age on the record.",
+"The name of Oceania's enemy in that war is withheld pending review.",
+"Demonstrably untrue: the Night Raiders return from every battle. Whether they count is another question.",
+"The archive has been unable to identify the photographer, and has been advised not to try."
+],
+see: ["council","places-oceania","edmund"]
+},
+{
+id: "edmund", title: "Edmund Quinnell", cat: "People", acc: "PE-004", status: "Restricted", accent: "oc",
+lead: "<p><b>Edmund Quinnell</b> is the Fourth General of [[oceania|Oceania]], heir to some three hundred years of Quinnell military service.[^1] He has never issued an order he was not prepared to carry out himself.</p>",
+info: { art: "insignia-4", caption: "Insignia of the Fourth seat.", pcap: "The Fourth General studies Nordheim positions in a forward command tent on the ninth day of a siege. Supplies had been calculated for twelve. Press photograph, <i>The Vanguard</i>.", rows: [["Seat","Fourth General"],["Age","42"],["Height","6'2\""],["Family","House Quinnell"],["Known for","Remembering every name"],["Apprentice","[[melvyn|Melvyn]], six years"]] },
+sections: [
+{ h: "Reputation", html: "<p>Solid. Not brilliant, not infamous, not feared. The general you want in the room when things go wrong. Approachable enough that junior officers do not dread him, principled enough that corrupt ones do. He listens when people speak, which makes him unusual at court. He prefers soldiers who ask questions to soldiers who obey blindly.</p>" },
+{ h: "The two-front war", html: "<p>About eight years ago, as a Colonel of 34, Edmund served in the war against [[eurasia|Eurasia]] and [[nordheim|Nordheim]], who had formed a temporary alliance against Oceania. During a major engagement, an order arrived through legitimate channels that repositioned the unit of his younger brother, Lieutenant Ivan Quinnell, into an exposed flank, to absorb the worst of the fighting while other forces recovered.</p><p>Oceania won. Ivan's unit was overrun and he was captured by Nordheim forces. What was returned to Edmund was returned in accordance with Nordheim's ritual practice.[^2] Edmund did not look away.</p><p>Edmund never issued that order. He still does not know who did.[^3]</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>He carries Ivan's ID tag at all times. He blames himself completely, and has not said so aloud. He believes, without evidence, that [[noctis|the Third General]] signed the order. He has been pulling at the same question for eight years and has not once stopped.</p><p>He does not ask for help. He intends to deal with it later. It has been eight years.</p>" },
+{ h: "Habits", html: "<ul><li>Drinks strong, bad coffee, black.</li><li>Plays chess, usually alone.</li><li>Dislikes being thanked for what he considers basic decency.</li></ul>" }
+],
+notes: [
+"Quinnell family records. The archive counted eleven generations before losing patience.",
+"The archive has chosen not to describe the practice. See [[nordheim|Nordheim]].",
+"The signature line on the archive's copy of the order is illegible. The archive's copy may not be the original."
+],
+see: ["council","noctis","melvyn","nordheim"]
+},
+{
+id: "tzadik", title: "Tzadik Kain", cat: "People", acc: "PE-005", status: "Restricted", accent: "oc",
+lead: "<p><b>Tzadik Kain</b> is the Fifth General of [[oceania|Oceania]] and the Hero of Greymarch Pass. Junior officers have wept at the word \"Proceed.\"[^1]</p>",
+info: { art: "insignia-5", caption: "Insignia of the Fifth seat.", pcap: "The Fifth General addresses the assembled colonels at City Hall, the Citadel, during the winter briefing on the northern trade routes. He adjusted his glasses twenty-four times. Sylvian bulletin, printed from an unflattering angle.", rows: [["Seat","Fifth General"],["Height","6'10\""],["Known for","Greymarch Pass"],["Family","Military lineage; two sisters"],["Speech","Mostly single words"]] },
+sections: [
+{ h: "Greymarch Pass", html: "<p>Three years before his appointment, Colonel Kain was stationed at Greymarch Pass, a narrow mountain corridor on the northwestern border with [[nordheim|Nordheim]]. Intelligence projected minor skirmishes. A full Nordheim offensive struck at night, in a blizzard, at four times the regiment's numbers, through a secondary pass marked impassable in winter. Every officer above him was killed or incapacitated within the hour.</p><p>He held the pass for 31 hours, without reinforcements or resupply, using the terrain, controlled rockslides and rotating fallbacks to bleed the enemy without breaking. When relief arrived at dawn he was standing at the front, coat shredded, covered in blood, expression unchanged.[^2] He was made Fifth General within the year. Nobody asked whether he wanted it.</p>" },
+{ h: "Reputation", html: "<p>Terrifying, by universal agreement. He never smiles, speaks in clipped single words that sound like death sentences, and stares. His reports are the most thorough in the empire.[^3]</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>He is painfully anxious and afraid of almost everything except numbers. He knows he is good at the work and believes he is a fraud at being a General. He rehearses briefings with his assistant. He stood at the front at Greymarch because his legs had locked and he could not sit down.</p><p>The cross he wears was a good-luck charm from his younger sister Elara. His sisters send care packages: tea, hair ties, and notes telling him to sleep. He does not come from money, and a General's pay barely feeds him.[^4]</p>" }
+],
+notes: [
+"Several independent sources. One officer claims it was the word \"Adequate\".",
+"He had not spoken a single unnecessary word in 31 hours. Sources disagree on whether he had spoken any.",
+"His Greymarch report includes observations on cloud cover and bird migration. The archive has kept it in full.",
+"The Sylvian bulletins photograph him only from unflattering angles. On one occasion they cropped out his head."
+],
+see: ["council","nordheim","oceania"]
+},
+{
+id: "melvyn", title: "Melvyn", cat: "People", acc: "PE-006", status: "Restricted", accent: "oc",
+hat: "Officially recorded as Melvyn Cressida. He does not use the name.[^1]",
+lead: "<p><b>Melvyn</b> is the Sixth General of [[oceania|Oceania]]. He handles \"complications\" on the Emperor's personal orders, and he catches traitors, successfully and consistently.</p>",
+info: { art: "insignia-6", caption: "Insignia of the Sixth seat.", pcap: "The Sixth General at a council dinner, taken during a dispute between the Third and Eighth Generals over a troop deployment. He did not intervene. The photographer's name is withheld at his request.", rows: [["Seat","Sixth General"],["Age","30"],["Height","6'2\""],["Born","A neighbouring kingdom, since conquered"],["Ward of","[[house-cressida|House Cressida]], from age 16"],["Trained by","[[edmund|Edmund Quinnell]]"]] },
+sections: [
+{ h: "Appearance", html: "<p>Long dark hair tied in a half-ponytail, striking red eyes, lips darkened by old frostbite. Black uniform with gold accents and a fur robe on duty; a long coat off it.</p>" },
+{ h: "History", html: "<p>Born the son of a duke in a neighbouring kingdom, Melvyn was raised in the court of its Grand Queen as the son of a traitor. He supplied intelligence to Oceania and played a vital part in the kingdom's conquest, for which he received refugee status. At sixteen he was taken in by House Cressida; at twenty he enlisted. He served six years under the Fourth General and became Sixth General by thirty.</p>" },
+{ h: "Reputation", html: "<p>Rude to his peers, snide in meetings, not well-liked, and unbothered by it. An exceptional marksman and an invaluable strategist. Widely believed to have sold his homeland because Oceania was going to win, and to go wherever the advantage is.</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>His father was a duke of royal blood who married an Oceanian woman. Convinced the family would rebel, the crown had them all executed for treason when Melvyn was two or three. He was spared only because of his father's royal blood. Selling the kingdom's secrets was revenge as much as calculation.</p><p>He hates owing anyone, and owes the Cressidas most of all. He stopped visiting their estate six years ago.[^2] He catches traitors so well because he knows exactly how they think. He is loyal to what Oceania pays him in rank, and the archive is not aware of anything else.</p><p>The free city of [[novagrad|Novagrad]] rose from the ruins of the kingdom he helped bring down.[^3]</p>" },
+{ h: "Habits", html: "<ul><li>Taps his fingers on surfaces when anxious. When the tapping stops, something has genuinely unsettled him.</li><li>Hunts, and visits the Ruin in disguise.</li><li>Owns a mahogany ashtray he is proud of, for reasons he has not shared.</li></ul>" }
+],
+notes: [
+"He signs every document \"Melvyn\". Clerks add the surname afterward.",
+"The circumstances are sealed. The archive notes only that the Cressida heir has not spoken of it either.",
+"The archive has not confirmed whether Novagrad knows the name of the man who sold its kingdom."
+],
+see: ["council","house-cressida","edmund","novagrad"]
+},
+{
+id: "lysander", title: "Lysander Thorne", cat: "People", acc: "PE-008", status: "Restricted", accent: "oc",
+lead: "<p><b>Lysander Thorne</b> is the Eighth General of [[oceania|Oceania]] and, at 28, the youngest on [[council|the council]]. He is never seen without his gas mask. Everyone knows what he is: the price of his tribe's surrender, paid in uniform.</p>",
+info: { art: "insignia-8", caption: "Insignia of the Eighth seat.", pcap: "The Eighth General after a victory. Press photograph, <i>The Vanguard</i>.", rows: [["Seat","Eighth General"],["Age","28"],["Height","5'11\""],["Father","Kardal Thorne, chieftain"],["Enlisted","Age 12, by treaty"],["Mask","Black, gold-lined; always"]] },
+sections: [
+{ h: "The Thorne treaty", html: "<p>Lysander was born the only son of Kardal Thorne, chieftain of a warrior tribe on Oceania's frontier. His mother died at his birth. When the tribe was losing to Oceania, Kardal surrendered in exchange for their own territory, on one condition written into the treaty: his twelve-year-old son would enlist in the Oceanian army as a guarantee of the tribe's loyalty.[^1]</p><p>Every promotion Lysander has earned since has been leverage at the treaty table, and every victory has bought the tribe more land. He was appointed Eighth General at 27.</p>" },
+{ h: "Reputation", html: "<p>Quiet. Righteous. Means every word exactly as stated. Addresses people by rank, never by name. People underestimate him, and assume the mask is vanity.[^2]</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>The mask hides a decaying disease on his right cheek, slowly eating toward the bone. He does not look at his own reflection.</p><p>He hates his father completely. Kardal would be untroubled by his death; a son who died a hero would be worth a stronger hand at the treaty table. Lysander knows this. He cannot fail, because failure costs the tribe, and he cannot leave, because desertion breaks the treaty.</p>" },
+{ h: "Relationships", html: "<ul><li>Feels safe around [[edmund|Edmund Quinnell]].</li><li>Sits comfortably in silence with [[tzadik|Tzadik Kain]].</li><li>Once punched [[melvyn|Melvyn]] over an insult to his father he did not entirely disagree with.</li><li>Cannot be in a room with [[ansel|Ansel Sylvian]] for long, and cannot say why.</li></ul>" }
+],
+notes: [
+"The treaty text held by this archive omits the clause concerning the chieftain's son. Other copies do not.",
+"The mask is lined with gold. Whoever chose the gold, it was not Lysander."
+],
+see: ["council","ansel","oceania"]
+},
+{
+id: "ansel", title: "Ansel Sylvian", cat: "People", acc: "PE-009", status: "Restricted", accent: "oc",
+lead: "<p><b>Ansel Sylvian</b> is the Ninth General of [[oceania|Oceania]] and the friendliest man on [[council|the council]]. He commands punitive operations, reprisals, and whatever arrives under the Emperor's black seal.</p>",
+info: { art: "insignia-9", caption: "Insignia of the Ninth seat.", pcap: "The Ninth General, smiling. Sylvian bulletin.", rows: [["Seat","Ninth General"],["Age","29"],["Height","5'10\""],["House","[[house-sylvian|Sylvian]]"],["Called","\"The Emperor's Attack Dog\"; \"the Menace\" (council)"],["Known for","The Velmark reprisal"]] },
+sections: [
+{ h: "Early life", html: "<p>The only son of House Sylvian's matriarch, raised backstage at the Pandora, falling asleep to his mother's arias. Most children read the bulletins; Ansel watched them being written. He was introduced to the Emperor as a child, and the errands found him early.</p>" },
+{ h: "Velmark", html: "<p>His name was made in the east. At 26, the Velmark reprisal ended organised resistance there for a decade.[^1] He sent the casualty figures home in his weekly letter.</p>" },
+{ h: "Reputation", html: "<p>He throws the council's best parties and plans the menus himself. He remembers every name: every subordinate's, every casualty's, every prisoner's. Nobody has ever heard him raise his voice. He speaks of his work in domestic terms: errands, tidying, the Tuesday thing.</p>" },
+{ restricted: true, h: "Restricted file", html: "<p>He executes orders exactly as written, never less and never more. Exceeding an order is, to him, the same sin as refusing one. When an order says <i>contain</i>, he contains.</p><p>He has no capacity for guilt, rage or grief. This is not concealment; there is nothing to conceal. He was not made with a whip. House Sylvian raised him with warmth and unconditional love, inside a frame where loyalty is goodness and everything that happens to everyone else is irrelevant. It worked.[^2]</p>" },
+{ h: "Habits", html: "<ul><li>Keeps hounds and spoils them. The oldest is named Duty.</li><li>Steals food off other people's plates while maintaining eye contact.</li><li>Writes to his mother daily. She sends vitamins.</li><li>Closes dead men's eyes in passing.</li></ul>" }
+],
+notes: [
+"See [[places-oceania|Places of Oceania]]. The official record calls it a pacification. The numbers came in under projection.",
+"Compare [[lysander|Lysander Thorne]], who was raised for the same work by fear, and for whom it did not."
+],
+see: ["council","house-sylvian","lysander"]
+},
+{
+id: "house-cressida", title: "House Cressida", cat: "Institutions", acc: "IN-002", status: "Open", accent: "oc",
+lead: "<p><b>House Cressida</b> is one of the wealthiest and most powerful houses in [[oceania|Oceania]]. It funds roughly 40% of the military, and through its control of the southern maritime trade routes it holds the empire's supply line: food, medicine, textiles and materiel all move on ships its purse pays for.</p>",
+info: { art: "ships", caption: "Cressida-funded shipping, southern lanes.", rows: [["Heads","Hana and Adam Cressida"],["Heir","Myfir Cressida"],["Former ward","[[melvyn|Melvyn]], Sixth General"],["Holds","40% of military funding; southern trade"]] },
+sections: [
+{ h: "Myfir Cressida", html: "<p>The only heir, around 32. On paper, Lord of the Admiralty and Imperial Trade Commissioner; in practice, the man who holds the purse. He has no military rank and effectively outranks most of the empire.[^1] As a child he was the angel-faced poster boy of Oceania's bulletins, and he grew up at embassy tables learning that everything has a price.</p><p>Court gossip paints him as a pampered aristocrat who has never held a rifle. He allows it. His marksmanship on the winter hunting grounds is lethal, and he keeps some forty wolfdogs on his northern estate, which he fed himself as pups.</p>" },
+{ h: "The ward", html: "<p>The house took in [[melvyn|Melvyn]] at sixteen: a traitor to his own country, yes, but the enemy of one's enemy makes a lovely ward. He remains Melvyn Cressida on every official document. Relations between the former ward and the house have been distant for some years.[^2]</p>" }
+],
+notes: [
+"He writes everything important by hand. Everyone in the Citadel recognises his handwriting.",
+"He wears a gold cross earring. No one has reported it either."
+],
+see: ["melvyn","oceania","house-sylvian"]
+},
+{
+id: "house-sylvian", title: "House Sylvian", cat: "Institutions", acc: "IN-003", status: "Open", accent: "oc",
+banner: ["","Source notice","Some of this archive's Oceanian sources are Sylvian bulletins. Readers are advised accordingly."],
+lead: "<p><b>House Sylvian</b> deals in information. It controls intelligence and networking in [[oceania|Oceania]] through the entertainment industry: opera houses, brothels and leisure establishments. If propaganda is circulating in Oceania, Sylvian is behind it.</p>",
+info: { art: "opera", caption: "The Pandora on a performance night.", rows: [["Head","The matriarch"],["Heir","[[ansel|Ansel Sylvian]], Ninth General"],["Holdings","The Pandora; the Rose; the bulletins"],["Family saying","\"Waste is the only sin.\""]] },
+sections: [
+{ h: "Methods", html: "<p>Nobody knows how the Sylvians collect their information; everyone knows they are extraordinarily smooth at it. They are the empire's shadow infrastructure, shaping perception while [[house-cressida|House Cressida]] pays for the army.[^1]</p>" },
+{ h: "Holdings", html: "<p><b>The Pandora</b>, the great opera house where the elite gather nearly every night, and where the matriarch sings the empire's victories. <b>The Rose</b>, an elites-only establishment that openly doubles as an intelligence trading post. And the bulletins, which print the version of events most Oceanians believe.</p>" }
+],
+notes: [
+"The Fifth General believes the Sylvian bulletins hold a grudge against him over a remark about coffee stains. He is probably right."
+],
+see: ["ansel","founding-myth","places-oceania"]
+},
+{
+id: "adc", title: "The ADC Program", cat: "Institutions", acc: "IN-004", status: "Open", accent: "oc",
+lead: "<p>In [[oceania|Oceania]], the title <b>aide-de-camp</b> (ADC) covers two very different things. Most ADCs of either kind are women.</p>",
+info: { art: "citadel", caption: "Bioengineering division, the Citadel.", rows: [["Regular ADCs","Junior officers"],["Modified ADCs","State-engineered"],["Mark","Bright blue collar (modified only)"],["Marriage","Recognised for regular ADCs only"]] },
+sections: [
+{ h: "Regular ADCs", html: "<p>Ordinary junior officers assigned as personal aides to high-ranking officers, handling correspondence, schedules and logistics. The posting is coveted and often a fast track to promotion. It is not uncommon for an ADC to marry the officer they served under, and such marriages are fully recognised.</p>" },
+{ h: "Modified ADCs", html: "<p>The most recent and controversial product of Oceania's bioengineering. They are people who have surrendered their personhood to the state and undergone extensive modification to serve the highest-ranking officers. Their skills, temperament and even appearance can be tailored, and they are conditioned to be devoted to their superior. Officially junior officers, they are widely regarded as sapient tools and the ultimate status symbol.[^1]</p><p>Because a modified ADC's devotion is manufactured, the state does not recognise marriage to one. You cannot marry someone who was made to love you.</p>" }
+],
+notes: [
+"Of the six Generals with open records, the archive can confirm a modified ADC for one."
+],
+see: ["oceania","melvyn"]
+},
+{
+id: "places-oceania", title: "Places of Oceania", cat: "Places", acc: "PL-002", status: "Open", accent: "oc",
+lead: "<p>A gazetteer of notable locations in [[oceania|Oceania]].</p>",
+info: { art: "ivory", caption: "Ivory Edge. The archive's correspondent did not go closer.", rows: [["Capital","The Citadel"],["Industry","The Furnace District"],["Borders","Ashgate (east), Harrow Station (west), Ivory Edge (north)"]] },
+sections: [
+{ h: "The Citadel", html: "<p>The capital and seat of the Emperor. The central military base is here, and the council meets at City Hall. It is the only city with uninterrupted electricity.</p>" },
+{ h: "The Furnace District", html: "<p>The primary industrial zone, two hours south of the Citadel by heated rail. It never stops. Twenty-hour rotating shifts produce weapons, munitions, vehicles and the chemical compounds for gas masks. Workers live in on-site blocs and are technically employees of the empire rather than slaves, a distinction the empire considers meaningful. It has the highest rate of black-market activity in Oceania.[^1]</p>" },
+{ h: "Ivory Edge", html: "<p>The northern border, where the sun never rises and the air is toxic. Home of the Night Raiders under [[noctis|the Third General]]. The ground sometimes bleeds when disturbed. On certain nights the northern lights scream.[^2]</p>" },
+{ h: "Ashgate", html: "<p>A frontier checkpoint on the eastern border: a brutalist iron gate flanked by watchtowers, half-buried in drift. The garrison is understaffed and underpaid and has been making its own arrangements for years. Contraband moves through constantly. The empire knows, and has decided a border post that looks the other way is more useful than none.[^3]</p>" },
+{ h: "Harrow Station", html: "<p>A disciplined western outpost where prisoners of war, defectors and persons of interest are processed. Clean, heated, and deeply unpleasant. Interrogation rooms are on the lower level; the upper level looks like any other government office, which is the point.</p>" },
+{ h: "The Ruin", html: "<p>A black market on the outskirts, frequented by slave traders, bounty hunters and criminals, and full of illegal technology and mutants from failed experiments. Some circuses capture the creatures and exhibit them.</p>" },
+{ h: "The Pandora and the Rose", html: "<p>Both owned by [[house-sylvian|House Sylvian]]. The Pandora is the opera house of the elite. The Rose is an elites-only brothel and intelligence trading post, where high-ranking officers are advised to trust no one.</p>" },
+{ h: "Greymarch Pass", html: "<p>A mountain corridor on the northwestern border with [[nordheim|Nordheim]], where [[tzadik|Tzadik Kain]] held the line for 31 hours.</p>" },
+{ h: "Velmark", html: "<p>A town in the eastern conquered territories and once the heart of organised resistance, until the [[ansel|Ninth General]]'s reprisal. Captured resistance members were sent to the labour camps.</p>" }
+],
+notes: [
+"Testimony, Furnace District, anonymous: \"The air tastes like iron and something else. You stop naming it after a while.\"",
+"The archive has received three accounts of the screaming. All three witnesses asked that the archive not describe it.",
+"A General Staff inspection found Ashgate \"in full order\". The archive's copy of the inspection report was purchased in Ashgate."
+],
+see: ["oceania","noctis","house-sylvian"]
+},
+{
+id: "places-eurasia", title: "Places of Eurasia", cat: "Places", acc: "PL-001", status: "Open", accent: "eu",
+lead: "<p>A gazetteer of notable locations in [[eurasia|Eurasia]].</p>",
+info: { art: "domes", caption: "The glass domes, warmed from below.", rows: [["Capital","\"The Capital\""],["Warmth","Geothermal vents"],["Culture","Conservatory; Imperial Opera House"]] },
+sections: [
+{ h: "The Capital", html: "<p>Amber gaslight, cathedral spires, and the terraced estates of the great houses overlooking the shipyards and the older, narrower streets of the lower districts.</p>" },
+{ h: "The Royal Conservatory", html: "<p>The cultural heart of the Capital, funded by the Crown and noble patronage. Its standards, and its snobbery, are a thousand years old.</p>" },
+{ h: "The Imperial Opera House", html: "<p>Where premieres are given under Crown patronage and noble prodigies are presented to the court. Court dress is required in the royal tier.</p>" },
+{ h: "The Royal Shipyards", html: "<p>Where the Imperial Navy is built. No ship touches water until the Church has blessed her on the slipway.[^1]</p>" },
+{ h: "The Glass Domes", html: "<p>Domed agricultural zones and heated stone aqueducts, warmed by geothermal vents, that sustain orchards and vineyards year-round. The clergy call the vents a gift of Providence.</p>" },
+{ h: "The Lower Districts", html: "<p>The narrow streets of the common-born, below the terraces. The Upper Terraces are closed to their foot traffic after the evening bells.[^2]</p>" }
+],
+notes: [
+"The archive notes that the blessing has never once been withheld.",
+"Notice of the City Wardens, as printed in <i>The Crown &amp; Altar Gazette</i>."
+],
+see: ["eurasia"]
+},
+{
+id: "novagrad", title: "Novagrad", cat: "Nations", acc: "NA-005", status: "Open", accent: "other",
+banner: ["danger","Banned material","Material about Novagrad is banned in Oceania."],
+lead: "<p><b>Novagrad</b> is a small free city on the frontier of [[oceania|Oceania]], and one of the enemies Oceania is at war with. By every measure it should have fallen years ago. It has not.</p>",
+info: { art: "novagrad", caption: "Novagrad, and the bell.", rows: [["Government","Citizens' assembly (the veche)"],["Ruler","None"],["Founded","After the fall of a conquered kingdom"],["Size","Small"],["Status","Unconquered"]] },
+sections: [
+{ h: "Origins", html: "<p>Novagrad rose from the ruins of a kingdom Oceania conquered. The survivors who refused to submit gathered in one city and swore never to have a king again.[^1]</p>" },
+{ h: "Government", html: "<p>It has no Emperor, no king and no generals who rule. Its citizens govern themselves through the <i>veche</i>, an assembly where any free citizen may speak, summoned by the ringing of the city bell.</p>" },
+{ h: "War with Oceania", html: "<p>Novagrad is small, poor and outnumbered, and Oceania has thrown far more at it than its size could ever justify. Officially, Oceania calls it a nest of bandits propped up by Eurasian gold.[^2] Unofficially, it is a dangerous question: a city with Oceania's cold, ruins and hunger that survived without becoming what Oceania became. See [[founding-myth|There Was No Other Way]].</p>" }
+],
+notes: [
+"Bell-ringers' rolls, smuggled out through Ashgate. The archive holds a partial copy.",
+"The Eurasian gold is real. The archive does not believe it explains anything."
+],
+see: ["founding-myth","oceania","melvyn"]
+},
+{
+id: "southern-dominions", title: "The Southern Dominions", cat: "Nations", acc: "NA-003", status: "Stub", accent: "other",
+lead: "<p>The <b>Southern Dominions</b> are ruled by an elected Trade Council of wealthy merchant families, with a figurehead Grand Mediator. They are the primary food supplier of a war-ridden world. Without them, armies starve.</p>",
+info: { art: "dominions", caption: "The Grand Bazaar.", rows: [["Government","Elected Trade Council"],["Figurehead","The Grand Mediator"],["Exports","Food, textiles, medicine, luxuries"],["Institution","The Grand Bazaar"]] },
+sections: [
+{ h: "The Grand Bazaar", html: "<p>The largest trade hub in the world, where even enemies are forced to do business under enforced neutrality.</p>" },
+{ h: "Relations", html: "<p>Close trading partners of [[eurasia|Eurasia]]. Officially in conflict with [[oceania|Oceania]], yet their food still reaches Oceanian ports on ships [[house-cressida|House Cressida]] pays for.[^1]</p>" }
+],
+notes: ["Oranges from the south cost more in the Citadel than the chairs people eat them in."],
+see: ["eurasia","house-cressida"]
+},
+{
+id: "nordheim", title: "Nordheim", cat: "Nations", acc: "NA-004", status: "Stub", accent: "other",
+lead: "<p><b>Nordheim</b> is a cult-state, isolated from the world and driven entirely by religious zealotry. It is led by a mysterious figure called the Seer.</p>",
+info: { art: "nordheim", caption: "Nordheim's coast, from a distance.", rows: [["Government","Theocratic cult-state"],["Leader","The Seer"],["Awaits","The One True Prophet"],["Enemy","Oceania"]] },
+sections: [
+{ h: "Beliefs", html: "<p>Nordheim awaits an unrevealed messiah, the One True Prophet, who will destroy [[oceania|Oceania]]. Every citizen is a willing martyr, which makes its warriors terrifying.</p>" },
+{ h: "Warfare", html: "<p>Nordheim treats war as holy doctrine and captured enemies as ritual material.[^1] It allied briefly with [[eurasia|Eurasia]] against Oceania some eight years ago, and its offensive at [[tzadik|Greymarch Pass]] was broken by a single colonel.</p>" }
+],
+notes: ["See [[edmund|Edmund Quinnell]]. The archive does not describe the ritual."],
+see: ["oceania","tzadik","edmund"]
+}
+];
+
+/* ===================== HOME CONTENT ===================== */
+const FEATURES = ["cataclysm","founding-myth","council","novagrad","adc","places-oceania"];
+const FEATURE_ART = { "places-oceania": "ivory", "council": "council", "adc": "furnace" };
+const FEATURE_BLURB = {
+  "cataclysm": "Half of Solis went to war. Nobody agrees who started it.",
+  "founding-myth": "Oceania's founding doctrine, and why it bans its own history.",
+  "council": "Nine seats. Six open records. Three sealed.",
+  "novagrad": "A small city that should have fallen years ago.",
+  "adc": "Two kinds of aide, and only one of them can marry.",
+  "places-oceania": "From the Citadel to Ivory Edge, where the lights scream."
+};
+const DYK = [
+  "…that every surviving account of the [[cataclysm|Cataclysm]] agrees on exactly one thing?",
+  "…that the Fifth General's report on [[tzadik|Greymarch Pass]] includes bird migration patterns?",
+  "…that [[eurasia|Eurasia]]'s capital is never named in its own newspaper?",
+  "…that the Ninth General's oldest hound is called [[ansel|Duty]]?",
+  "…that Oceania has no churches, but at least two of its elite wear crosses?",
+  "…that the archive holds no open records for three seats on [[council|the Council of Nine]]?"
+];
+
+/* ===================== ART ===================== */
+const PAL = {
+  world:    { type:"ruins",  sky:["#0b1015","#2a3440"], glow:"#c9a77a", sun:.18, ground:"#d8dee3", far:"#3a4550", near:"#151b21", lights:"#e7b77a", snow:1 },
+  eurasia:  { type:"spires", sky:["#151018","#4a3a40"], glow:"#e3a560", sun:.2, ground:"#e2dcd3", far:"#5a4a50", near:"#1c1418", lights:"#ffcf86", snow:.6, steam:1 },
+  oceania:  { type:"blocks", sky:["#07090c","#232a31"], glow:"#8a2a2a", sun:0, ground:"#cfd5da", far:"#2b3239", near:"#0c0f12", lights:"#d94a3a", snow:1.4, search:1 },
+  citadel:  { type:"blocks", sky:["#08090b","#2a2f35"], glow:"#9a3030", sun:0, ground:"#c8ced3", far:"#30373e", near:"#0d1013", lights:"#f0d27a", snow:1.2, search:1, tower:1 },
+  council:  { type:"blocks", sky:["#0a0b0d","#33292a"], glow:"#b0141c", sun:0, ground:"#c9cdd0", far:"#3a3033", near:"#120d0e", lights:"#f0d27a", snow:.8, tower:1 },
+  furnace:  { type:"stacks", sky:["#120a08","#4a2a1a"], glow:"#ff7a2a", sun:0, ground:"#9a8f88", far:"#3a2a24", near:"#140c0a", lights:"#ff9a4a", snow:.4, smoke:1 },
+  novagrad: { type:"walled", sky:["#0b1118","#33414f"], glow:"#e6b56c", sun:.12, ground:"#dfe5ea", far:"#3d4a57", near:"#141b22", lights:"#ffd28a", snow:1 },
+  dominions:{ type:"domes",  sky:["#1a1a22","#6a5a52"], glow:"#f0c08a", sun:.35, ground:"#cfc2b2", far:"#6a5a54", near:"#2a2220", lights:"#ffd59a", snow:.2, sea:1 },
+  nordheim: { type:"fjord",  sky:["#05080c","#1c2a33"], glow:"#6fd3b0", sun:0, ground:"#d6dde2", far:"#26333c", near:"#0b1116", lights:"#ff9a5a", snow:1, aurora:"#6fd3b0" },
+  ivory:    { type:"ice",    sky:["#020305","#120f1c"], glow:"#9a6fe0", sun:0, ground:"#c4c9d4", far:"#1d1a2a", near:"#07070c", lights:"#ff7a2a", snow:1.6, aurora:"#b06fe0" },
+  greymarch:{ type:"peaks",  sky:["#0a0e12","#2e3740"], glow:"#9fb0bf", sun:0, ground:"#dde3e8", far:"#3a4550", near:"#161c22", lights:"#e7b77a", snow:1.8 },
+  ships:    { type:"ships",  sky:["#0c1117","#38424c"], glow:"#d6b48a", sun:.15, ground:"#2a343e", far:"#3a4550", near:"#10161c", lights:"#ffd28a", snow:.8, sea:1 },
+  opera:    { type:"opera",  sky:["#0d090c","#3a2228"], glow:"#e8b070", sun:0, ground:"#d6cfc8", far:"#4a3036", near:"#170d10", lights:"#ffd08a", snow:.7 },
+  domes:    { type:"glass",  sky:["#141018","#4a3c40"], glow:"#f0b070", sun:.22, ground:"#e2dcd3", far:"#5a4a50", near:"#1c1418", lights:"#ffd890", snow:.6, steam:1 },
+  footer:   { type:"ruins",  sky:["#0a0d10","#1a222a"], glow:"#b4501f", sun:0, ground:"#20272e", far:"#1a2128", near:"#0b0f13", lights:"#e7b77a", snow:.6 }
+};
+
+function hash(s){let h=2166136261;for(let i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619)}return h>>>0}
+function rng(seed){let s=seed>>>0||1;return()=>{s=(Math.imul(s,1664525)+1013904223)>>>0;return s/4294967296}}
+
+function paint(cv, key){
+  const r = cv.getBoundingClientRect(); const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const W = Math.max(2, Math.round(r.width*dpr)), H = Math.max(2, Math.round(r.height*dpr));
+  cv.width = W; cv.height = H; const g = cv.getContext("2d");
+  if (key.startsWith("insignia")) return insignia(g, W, H, key.split("-")[1]);
+  const p = PAL[key] || PAL.world; const rand = rng(hash(key));
+  // sky
+  let gr = g.createLinearGradient(0,0,0,H); gr.addColorStop(0,p.sky[0]); gr.addColorStop(1,p.sky[1]); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  const hz = H*0.68;
+  // glow / sun
+  const gx = W*(0.25+rand()*0.5), gy = hz - H*0.05;
+  gr = g.createRadialGradient(gx,gy,0,gx,gy,W*0.6); gr.addColorStop(0, hexA(p.glow,.45)); gr.addColorStop(1, hexA(p.glow,0)); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  if (p.sun) { g.fillStyle = hexA("#f3e2c4", p.sun+.25); g.beginPath(); g.arc(gx, gy, Math.min(W,H)*0.05, 0, Math.PI*2); g.fill(); }
+  if (p.aurora) aurora(g, W, H, p.aurora, rand);
+  // far hills
+  g.fillStyle = p.far; g.beginPath(); g.moveTo(0,hz);
+  for (let x=0;x<=W;x+=W/24) g.lineTo(x, hz - H*0.06 - rand()*H*0.1); g.lineTo(W,H); g.lineTo(0,H); g.fill();
+  if (p.search) searchlights(g, W, H, hz, rand);
+  // skyline
+  g.fillStyle = p.near; skyline(g, p, W, H, hz, rand);
+  // ground
+  g.fillStyle = p.sea ? p.ground : p.ground;
+  if (p.sea) { gr = g.createLinearGradient(0,hz+H*0.06,0,H); gr.addColorStop(0, p.far); gr.addColorStop(1, p.near); g.fillStyle = gr; g.fillRect(0, hz+H*0.06, W, H); g.strokeStyle = hexA(p.glow,.35); g.lineWidth=Math.max(1,W/600); for(let i=0;i<14;i++){const y=hz+H*0.08+rand()*H*0.25; const x=rand()*W; g.beginPath(); g.moveTo(x,y); g.lineTo(x+W*0.08,y); g.stroke();} }
+  else { g.beginPath(); g.moveTo(0,H); g.lineTo(0, hz+H*0.1); for (let x=0;x<=W;x+=W/16) g.lineTo(x, hz+H*0.08+rand()*H*0.05); g.lineTo(W,H); g.fillStyle = hexA(p.ground,.92); g.fill(); }
+  // static snow
+  g.fillStyle = "rgba(255,255,255,.75)";
+  const n = Math.round(W*H/9000*p.snow);
+  for (let i=0;i<n;i++){ g.globalAlpha = .25+rand()*.6; g.beginPath(); g.arc(rand()*W, rand()*H, (0.5+rand()*1.6)*dpr, 0, Math.PI*2); g.fill(); }
+  g.globalAlpha = 1;
+  // vignette
+  gr = g.createRadialGradient(W/2,H/2,Math.min(W,H)*0.3,W/2,H/2,Math.max(W,H)*0.75); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.45)"); g.fillStyle=gr; g.fillRect(0,0,W,H);
+}
+function hexA(hex,a){const n=parseInt(hex.slice(1),16);return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`}
+function aurora(g,W,H,c,rand){ for(let k=0;k<3;k++){ g.beginPath(); const y0=H*(0.12+k*0.07); g.moveTo(0,y0); for(let x=0;x<=W;x+=W/20) g.lineTo(x, y0+Math.sin(x/W*6+k+rand())*H*0.05); g.lineTo(W,y0+H*0.18); g.lineTo(0,y0+H*0.18); const gr=g.createLinearGradient(0,y0,0,y0+H*0.18); gr.addColorStop(0,hexA(c,.35)); gr.addColorStop(1,hexA(c,0)); g.fillStyle=gr; g.fill(); } }
+function searchlights(g,W,H,hz,rand){ for(let i=0;i<3;i++){ const x=W*(0.2+i*0.3+rand()*0.1); const a=-Math.PI/2+(rand()-.5)*0.9; const len=H*1.1; g.beginPath(); g.moveTo(x,hz); g.lineTo(x+Math.cos(a-0.05)*len, hz+Math.sin(a-0.05)*len); g.lineTo(x+Math.cos(a+0.05)*len, hz+Math.sin(a+0.05)*len); g.closePath(); const gr=g.createLinearGradient(x,hz,x,0); gr.addColorStop(0,"rgba(255,240,210,.22)"); gr.addColorStop(1,"rgba(255,240,210,0)"); g.fillStyle=gr; g.fill(); } }
+function windows(g,x,y,w,h,c,rand,dens){ const s=Math.max(2,w/10); g.save(); g.fillStyle=c; for(let yy=y+s*1.5; yy<y+h-s; yy+=s*2.2) for(let xx=x+s; xx<x+w-s; xx+=s*2) if(rand()<dens){ g.globalAlpha=.5+rand()*.5; g.fillRect(xx,yy,s*.8,s*.9);} g.restore(); }
+function skyline(g,p,W,H,hz,rand){
+  const base = hz + H*0.1, t = p.type;
+  if (t==="walled") { // hill, wall, bell tower
+    g.beginPath(); g.moveTo(W*0.15,base); g.quadraticCurveTo(W*0.5,hz-H*0.12,W*0.85,base); g.fill();
+    const wy = hz - H*0.02; g.fillRect(W*0.3, wy-H*0.06, W*0.4, H*0.12);
+    for(let x=W*0.3;x<W*0.7;x+=W*0.025) g.fillRect(x, wy-H*0.085, W*0.012, H*0.03);
+    for (let i=0;i<9;i++){ const bw=W*(0.03+rand()*0.03), bh=H*(0.05+rand()*0.08), bx=W*0.32+rand()*W*0.34; g.fillRect(bx, wy-H*0.06-bh, bw, bh); windows(g,bx,wy-H*0.06-bh,bw,bh,p.lights,rand,.25); g.fillStyle=p.near; }
+    const tx=W*0.5, tw=W*0.035, th=H*0.32; g.fillRect(tx-tw/2, wy-th, tw, th); g.beginPath(); g.moveTo(tx-tw*0.8, wy-th); g.lineTo(tx, wy-th-H*0.07); g.lineTo(tx+tw*0.8, wy-th); g.fill();
+    g.fillStyle = p.lights; g.globalAlpha=.9; g.beginPath(); g.arc(tx, wy-th+H*0.04, tw*0.28, 0, Math.PI*2); g.fill(); g.globalAlpha=1; g.fillStyle=p.near; return;
+  }
+  if (t==="fjord") { g.beginPath(); g.moveTo(0,H); g.lineTo(0,hz-H*0.25); g.lineTo(W*0.18,hz-H*0.1); g.lineTo(W*0.3,base); g.lineTo(0,H); g.fill(); g.beginPath(); g.moveTo(W,H); g.lineTo(W,hz-H*0.3); g.lineTo(W*0.78,hz-H*0.12); g.lineTo(W*0.66,base); g.lineTo(W,H); g.fill();
+    for (let i=0;i<5;i++){ const x=W*(0.36+i*0.06), w=W*0.045, y=hz+H*0.03; g.beginPath(); g.moveTo(x,y); g.lineTo(x+w/2,y-H*0.05); g.lineTo(x+w,y); g.lineTo(x+w,y+H*0.04); g.lineTo(x,y+H*0.04); g.fill(); g.fillStyle=p.lights; g.fillRect(x+w*0.4,y+H*0.01,w*0.2,H*0.02); g.fillStyle=p.near; }
+    g.fillRect(0, base, W, H); return; }
+  if (t==="ice") { for (let x=-W*0.05; x<W*1.05; x+=W*(0.03+rand()*0.05)) { const h=H*(0.08+rand()*0.35); g.beginPath(); g.moveTo(x,base); g.lineTo(x+W*0.02, base-h); g.lineTo(x+W*0.05, base); g.fill(); } g.fillRect(0,base,W,H); g.fillStyle=p.lights; for(let i=0;i<5;i++){ const x=W*(0.3+rand()*0.4), y=base-H*0.02-rand()*H*0.04; g.globalAlpha=.85; g.beginPath(); g.arc(x,y,W*0.004,0,Math.PI*2); g.arc(x+W*0.012,y,W*0.004,0,Math.PI*2); g.fill(); } g.globalAlpha=1; g.fillStyle=p.near; return; }
+  if (t==="peaks") { g.beginPath(); g.moveTo(0,H); let x=0; while(x<W){ const w=W*(0.12+rand()*0.18); g.lineTo(x+w/2, hz-H*(0.15+rand()*0.3)); g.lineTo(x+w, base); x+=w; } g.lineTo(W,H); g.fill(); return; }
+  if (t==="ships") { g.fillRect(0, base-H*0.02, W*0.18, H); for(let i=0;i<4;i++){ const x=W*(0.25+i*0.17+rand()*0.05), y=hz+H*0.04, w=W*0.12; g.beginPath(); g.moveTo(x,y); g.lineTo(x+w,y); g.lineTo(x+w*0.9,y+H*0.04); g.lineTo(x+w*0.08,y+H*0.04); g.fill(); g.fillRect(x+w*0.35,y-H*0.07,w*0.06,H*0.07); g.fillRect(x+w*0.55,y-H*0.05,w*0.05,H*0.05); g.fillStyle=p.lights; g.fillRect(x+w*0.2,y+H*0.01,w*0.03,H*0.012); g.fillStyle=p.near; } return; }
+  if (t==="opera") { const x=W*0.22, w=W*0.56, y=hz-H*0.2; g.fillRect(x,y,w,base-y); g.beginPath(); g.moveTo(x-W*0.02,y); g.lineTo(W/2,y-H*0.14); g.lineTo(x+w+W*0.02,y); g.fill(); g.beginPath(); g.arc(W/2,y-H*0.14,W*0.05,Math.PI,0); g.fill(); g.fillStyle=p.lights; for(let i=0;i<9;i++){ g.globalAlpha=.85; g.fillRect(x+w*(0.06+i*0.105), y+H*0.06, w*0.04, H*0.12); } g.globalAlpha=1; g.fillStyle=p.near; for(let i=0;i<10;i++){ g.fillRect(x+w*(0.04+i*0.104), y+H*0.03, w*0.012, base-y); } g.fillRect(0,base,W,H); return; }
+  if (t==="glass") { for(let i=0;i<4;i++){ const cx=W*(0.15+i*0.24), r=W*(0.08+rand()*0.04); g.beginPath(); g.arc(cx,base,r,Math.PI,0); g.fillStyle=hexA(p.lights,.28); g.fill(); g.strokeStyle=hexA(p.lights,.7); g.lineWidth=Math.max(1,W/500); g.stroke(); for(let k=1;k<5;k++){ g.beginPath(); g.moveTo(cx-r+k*r/2.5,base); g.quadraticCurveTo(cx,base-r*1.4,cx-r+k*r/2.5,base); g.stroke(); } } g.fillStyle=p.near; g.fillRect(0,base,W,H); return; }
+  let x = -W*0.02;
+  while (x < W) {
+    let w = W*(0.035+rand()*0.06), h = H*(0.08+rand()*0.22);
+    if (t==="blocks") { w*=1.3; h*=1.15; }
+    if (t==="stacks" && rand()<0.45) { w=W*0.018; h=H*(0.3+rand()*0.15); }
+    if (t==="ruins" && rand()<0.4) h*=0.5;
+    const y = base - h;
+    g.fillStyle = p.near;
+    if (t==="ruins") { g.beginPath(); g.moveTo(x,base); g.lineTo(x,y+h*rand()*0.2); g.lineTo(x+w*0.3,y); g.lineTo(x+w*0.5,y+h*0.25*rand()); g.lineTo(x+w*0.7,y+h*0.1); g.lineTo(x+w,y+h*0.3*rand()); g.lineTo(x+w,base); g.fill(); windows(g,x,y,w,h,p.lights,rand,.05); }
+    else g.fillRect(x,y,w,h);
+    if (t==="spires" && rand()<0.55) { g.beginPath(); g.moveTo(x,y); g.lineTo(x+w/2,y-h*(0.4+rand()*0.6)); g.lineTo(x+w,y); g.fill(); }
+    if (t==="domes" && rand()<0.6) { g.beginPath(); g.arc(x+w/2,y,w/2,Math.PI,0); g.fill(); }
+    if (t!=="ruins") windows(g,x,y,w,h,p.lights,rand, t==="blocks"?.12:.22);
+    if (t==="stacks" && w<W*0.02) { for(let k=0;k<6;k++){ g.globalAlpha=.18; g.fillStyle="#3a3230"; g.beginPath(); g.arc(x+w/2+k*W*0.012, y-k*H*0.05, W*(0.012+k*0.006), 0, Math.PI*2); g.fill(); } g.globalAlpha=1; g.fillStyle=p.lights; g.globalAlpha=.6; g.fillRect(x,y,w,H*0.008); g.globalAlpha=1; }
+    x += w + W*(rand()*0.01);
+  }
+  if (p.tower) { const tx=W*0.55, tw=W*0.05, th=H*0.45; g.fillStyle=p.near; g.fillRect(tx,base-th,tw,th); g.fillRect(tx+tw*0.35,base-th-H*0.08,tw*0.3,H*0.08); g.fillStyle=p.lights; g.globalAlpha=.9; g.fillRect(tx+tw*0.3,base-th+H*0.03,tw*0.4,H*0.02); g.globalAlpha=1; }
+  if (p.steam) { for(let k=0;k<14;k++){ g.globalAlpha=.08; g.fillStyle="#fff"; g.beginPath(); g.arc(rand()*W, base-rand()*H*0.2, W*(0.02+rand()*0.04), 0, Math.PI*2); g.fill(); } g.globalAlpha=1; }
+  g.fillStyle = p.near; g.fillRect(0, base, W, H);
+}
+const ROMAN = {"3":"III","4":"IV","5":"V","6":"VI","8":"VIII","9":"IX"};
+function insignia(g,W,H,n){
+  const css = getComputedStyle(document.documentElement);
+  g.fillStyle = "#14181d"; g.fillRect(0,0,W,H);
+  const cx=W/2, cy=H/2, r=Math.min(W,H)*0.34;
+  const gr=g.createRadialGradient(cx,cy,0,cx,cy,r*1.8); gr.addColorStop(0,"rgba(168,20,28,.35)"); gr.addColorStop(1,"rgba(168,20,28,0)"); g.fillStyle=gr; g.fillRect(0,0,W,H);
+  g.strokeStyle="#c9a961"; g.lineWidth=Math.max(2,r*0.04);
+  g.beginPath(); g.arc(cx,cy,r,0,Math.PI*2); g.stroke();
+  g.lineWidth=Math.max(1,r*0.015); g.beginPath(); g.arc(cx,cy,r*0.86,0,Math.PI*2); g.stroke();
+  for(let i=0;i<9;i++){ const a=-Math.PI/2+i*Math.PI*2/9; const on = (i+1)===Number(n); g.fillStyle = on ? "#e05a40" : "rgba(201,169,97,.55)"; g.beginPath(); g.arc(cx+Math.cos(a)*r*1.18, cy+Math.sin(a)*r*1.18, r*(on?0.07:0.04), 0, Math.PI*2); g.fill(); }
+  g.fillStyle="#efe6d2"; g.textAlign="center"; g.textBaseline="middle";
+  g.font = `600 ${Math.round(r*0.7)}px Cormorant, Garamond, serif`; g.fillText(ROMAN[n]||n, cx, cy+r*0.02);
+  g.font = `600 ${Math.round(r*0.12)}px "IBM Plex Sans Condensed", sans-serif`; g.fillStyle="#c9a961"; g.fillText("COUNCIL OF NINE", cx, cy+r*0.55);
+}
+const BY_ID = Object.fromEntries(R.map(r => [r.id, r]));
+
+/* ===================== ART HOOKS ===================== */
+const BANNER = { noctis: "ivory", edmund: "insignia-4", tzadik: "greymarch", melvyn: "citadel", lysander: "oceania", ansel: "opera" };
+function thumbFor(id){ return ART["thumb-" + id] ? "thumb-" + id : artFor(id); }
+function artFor(id){ const r = BY_ID[id]; if (r && r.info && r.info.art.startsWith("insignia") && ART[r.info.art]) return r.info.art; return BANNER[id] || (r && r.info && r.info.art) || "world"; }
+function artHTML(key, label, cls){ return `<div class="art ${cls||""}" data-art="${key}" role="img" aria-label="${label||""}"></div>`; }
+function renderArt(root){
+  root.querySelectorAll(".art[data-art]").forEach(el => {
+    const key = el.dataset.art;
+    const reuse = !ART[key] && REUSE[key] && ART[REUSE[key][0]] ? REUSE[key] : null;
+    const src = ART[key] || (reuse && ART[reuse[0]]);
+    const pos = reuse ? reuse[1] : POS[key];
+    if (src) { if (!el.querySelector("img")) el.innerHTML = `<img src="${src}" alt="" loading="lazy"${pos ? ` style="object-position:${pos}"` : ""}>`; return; }
+    let cv = el.querySelector("canvas"); if (!cv) { cv = document.createElement("canvas"); el.appendChild(cv); }
+    paint(cv, key);
+  });
+}
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let snowRAF = 0;
+function heroSnow(cv){
+  cancelAnimationFrame(snowRAF);
+  if (reduce || !cv) return;
+  const g = cv.getContext("2d"); const dpr = Math.min(window.devicePixelRatio||1, 2);
+  const size = () => { cv.width = cv.clientWidth*dpr; cv.height = cv.clientHeight*dpr; };
+  size();
+  const flakes = Array.from({length: 170}, () => ({ x: Math.random(), y: Math.random(), r: .5+Math.random()*2, s: .0005+Math.random()*.0015, d: Math.random()*6 }));
+  let t = 0;
+  const step = () => {
+    if (!document.body.contains(cv)) return;
+    if (cv.width !== Math.round(cv.clientWidth*dpr)) size();
+    g.clearRect(0,0,cv.width,cv.height); g.fillStyle = "#fff"; t++;
+    for (const f of flakes) { f.y += f.s; f.x += Math.sin(t/90+f.d)*.0004; if (f.y > 1) { f.y = -.02; f.x = Math.random(); } g.globalAlpha = .25 + f.r/4; g.beginPath(); g.arc(f.x*cv.width, f.y*cv.height, f.r*dpr, 0, Math.PI*2); g.fill(); }
+    g.globalAlpha = 1; snowRAF = requestAnimationFrame(step);
+  };
+  step();
+}
+
+/* ===================== MARKUP ===================== */
+function md(s){
+  return s
+    .replace(/\[\[redact:([^\]]+)\]\]/g, (_, t) => `<span class="redact" tabindex="0" role="button" aria-label="Redacted. Activate to declassify." title="Redacted. Click to declassify.">${t}</span>`)
+    .replace(/\[\[([a-z0-9-]+)\|([^\]]+)\]\]/g, (_, id, t) => `<a href="#${id}">${t}</a>`)
+    .replace(/\[\^(\d+)\]/g, (_, n) => `<sup class="fn"><button type="button" data-fn="${n}" aria-label="Note ${n}">[${n}]</button></sup>`);
+}
+function plain(html){ const d = document.createElement("div"); d.innerHTML = html; return d.textContent.replace(/\s+/g," ").trim(); }
+
+/* ===================== VIEWS (broadsheet) ===================== */
+const view = document.getElementById("view");
+
+const CREDIT = { world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown" };
+const BANNER_CAP = { ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "The Pandora on a performance night.", council: "City Hall, the Citadel, where the council meets." };
+const HEADLINES = {
+  cataclysm: ["Half of Solis Goes to War; the Sky Does Not Return", "Every surviving nation agrees on how it ended. None of them agree on how it began."],
+  eurasia: ["Crown and Altar Endure a Thousandth Winter", "The realm that came through the fire intact credits Providence, and its geothermal vents."],
+  oceania: ["Godless Empire Holds on Every Front", "Built from ruins and conquered peoples, Oceania is despised by its neighbours and keeps winning."],
+  novagrad: ["Small City Refuses, Again, to Fall", "Outnumbered, poor and banned from Oceanian print, the free city rings its bell."],
+  "founding-myth": ["The Doctrine Oceania Will Not Let You Question", "Why the empire bans its own early history."],
+  council: ["Nine Seats, Six Names, Three Sealed", "Who sits beside the Emperor, and who is not on record."],
+  adc: ["Two Kinds of Aide, and Only One May Marry", "Inside the Aide-de-Camp Program."],
+  "places-oceania": ["Where the Northern Lights Scream", "A gazetteer of Oceania, from the Citadel to Ivory Edge."]
+};
+
+function excerpt(r, n){
+  const src = [r.lead, ...r.sections.filter(s => !s.restricted).map(s => s.html)].join(" ")
+    .replace(/<div class="table-wrap">[\s\S]*?<\/table><\/div>/g, "")
+    .replace(/\[\[redact:[^\]]+\]\]/g, "██████").replace(/\[\^\d+\]/g, "").replace(/</g, " <");
+  const words = plain(md(src)).split(" ");
+  return words.length > n ? words.slice(0, n).join(" ") + "…" : words.join(" ");
+}
+function paras(text, per){ const w = text.split(" "); const out = []; for (let i = 0; i < w.length; i += per) out.push(`<p>${w.slice(i, i + per).join(" ")}</p>`); return out.join(""); }
+function photo(key, cls, caption, credit){ return `<figure>${artHTML(key, caption || "", cls)}${caption || credit ? `<figcaption>${credit ? `<span class="credit">${credit}</span>` : ""}${caption ? md(caption) : ""}</figcaption>` : ""}</figure>`; }
+
+function mastheadSmall(section){
+  return `<header class="masthead small"><h1><a href="#home">The Solis Archive</a></h1><div class="dl">Records Edition · ${section}</div></header>`;
+}
+function imprint(){
+  return `<footer class="imprint"><span>Printed by the Solis Archive under perpetual snow · ${R.length} records open · 3 sealed</span><nav aria-label="Archive sections"><a href="#cataclysm">The Cataclysm</a><a href="#eurasia">Eurasia</a><a href="#oceania">Oceania</a><a href="#novagrad">Novagrad</a><a href="#council">The Council</a><a href="#records">All records</a></nav></footer>`;
+}
+
+function story(id, size, photoCls, words){
+  const r = BY_ID[id]; const [hl, deck] = HEADLINES[id] || [r.title, ""];
+  const key = FEATURE_ART[id] || artFor(id);
+  return `<article>
+    <div class="kicker">${r.cat} · ${r.acc}</div>
+    <h3 class="hl ${size}"><a href="#${id}">${hl}</a></h3>
+    ${deck ? `<p class="deck">${deck}</p>` : ""}
+    ${photo(key, photoCls, "", CREDIT[key] || "Archive print")}
+    ${paras(excerpt(r, words), 70)}
+    <p class="more"><a href="#${id}">Read record ${r.acc} →</a></p>
+  </article>`;
+}
+
+function renderHome(){
+  const lead = BY_ID.cataclysm;
+  view.innerHTML = `<div class="sheet">
+    <header class="masthead">
+      <div class="ears">
+        <div class="ear"><b>Records Edition</b>Published without interruption since the archive began</div>
+        <h1><a href="#home">The Solis Archive</a></h1>
+        <div class="ear"><b>Price: Your Silence</b>Banned in Oceania · Disputed in Eurasia</div>
+      </div>
+      <p class="motto">“All the records that survived the fire, and several that should not have.”</p>
+      <div class="dateline"><span>Vol. XII · No. ${R.length}</span><span>Printed under perpetual snow</span><span>Daylight today: three hours</span></div>
+    </header>
+
+    <div class="front">
+      <article>
+        <div class="kicker">History · ${lead.acc}</div>
+        <h2 class="hl xl"><a href="#cataclysm">${HEADLINES.cataclysm[0]}</a></h2>
+        <p class="deck">${HEADLINES.cataclysm[1]}</p>
+        <div class="byline">From the Solis Archive · Historical desk</div>
+        ${photo("world", "ar-wide", "The world after: snow, ruin, and a sun that barely rises.", CREDIT.world)}
+        <div class="cols">${paras(excerpt(lead, 260), 75)}<p class="more"><a href="#cataclysm">Continued in record ${lead.acc} →</a></p></div>
+      </article>
+      <aside class="side">
+        <div class="box"><h3>Briefs</h3><ul>${DYK.map(d => `<li>${md(d)}</li>`).join("")}</ul></div>
+        <div class="box truths"><h3>Two Truths</h3>
+          <blockquote><p>“By grace of Providence, the realm endures.”</p><cite>The Crown &amp; Altar Gazette, Eurasia</cite></blockquote>
+          <blockquote><p>“There was no other way.”</p><cite>Founding doctrine, Oceania</cite></blockquote>
+        </div>
+        <div class="box notice"><b>Sealed by Order</b>The records of the <span class="redact" tabindex="0" role="button" aria-label="Redacted">First</span>, <span class="redact" tabindex="0" role="button" aria-label="Redacted">Second</span> and <span class="redact" tabindex="0" role="button" aria-label="Redacted">Seventh</span> Generals are not available to readers of this edition.</div>
+      </aside>
+    </div>
+
+    <hr class="rule double">
+    <div class="band three">
+      ${story("eurasia", "", "ar-photo", 90)}
+      ${story("oceania", "", "ar-photo", 90)}
+      ${story("novagrad", "", "ar-photo", 90)}
+    </div>
+
+    <hr class="rule double">
+    <div class="band four">
+      ${["founding-myth","council","adc","places-oceania"].map(id => story(id, "sm", "ar-sq", 50)).join("")}
+    </div>
+
+    <hr class="rule thick">
+    <div class="band two">
+      <section class="letters">
+        <div class="kicker">Correspondence</div>
+        <h2 class="hl">Letters to the Archivist</h2>
+        <h4>Who started the Cataclysm?</h4><div class="from">A reader in Ashgate</div><p>Every surviving nation has an answer. None of them match. See ${md("[[cataclysm|The Cataclysm]]")}.</p>
+        <h4>Is the Third General human?</h4><div class="from">Name withheld</div><p>The archive declines to speculate. Its correspondents mostly do not. See ${md("[[noctis|Noctis]]")}.</p>
+        <h4>Why does Oceania keep attacking one small city?</h4><div class="from">A worker in the Furnace District</div><p>Because the city is a question Oceania cannot afford to have answered. See ${md("[[novagrad|Novagrad]]")}.</p>
+        <h4>What is the Eurasian capital called?</h4><div class="from">A reader in the Capital</div><p>The archive would also like to know.</p>
+        <h4>Why are some passages blacked out?</h4><div class="from">Several readers</div><p>Restricted material. Click a redaction to declassify it. The archive accepts no responsibility for what you then know.</p>
+      </section>
+      <section>
+        <div class="box"><h3>In This Edition</h3><ul>${CATS.map(c => { const list = R.filter(r => r.cat === c); return `<li><b>${c}</b> — ${list.map(r => `<a href="#${r.id}">${r.title}</a>`).join(", ")}</li>`; }).join("")}</ul></div>
+        <div class="box notice"><b>Notice to Readers in Oceania</b>Possession of this edition is a matter for Harrow Station. The archive recommends reading it quickly.</div>
+      </section>
+    </div>
+    ${imprint()}
+  </div>`;
+  renderArt(view);
+}
+
+function renderRecord(r){
+  const cls = r.status.toLowerCase();
+  const key = artFor(r.id);
+  const sameArt = r.info && r.info.art === key;
+  const leadCap = sameArt ? ((ART[r.info.art] && r.info.pcap) ? r.info.pcap : r.info.caption) : (BANNER_CAP[key] || (r.info && r.info.caption) || "");
+  let info = "";
+  if (r.info) {
+    const portrait = r.info.art.startsWith("insignia");
+    const cap = (ART[r.info.art] && r.info.pcap) ? r.info.pcap : r.info.caption;
+    info = `<aside class="infobox" aria-label="Fact box"><div class="ititle">${r.title}</div>${sameArt ? "" : `<figure>${artHTML(r.info.art, r.info.caption, ART[r.info.art] ? "natural" : (portrait ? "portrait" : ""))}<figcaption>${md(cap)}</figcaption></figure>`}<table>${r.info.rows.map(([k,v]) => `<tr><th scope="row">${k}</th><td>${md(v)}</td></tr>`).join("")}</table></aside>`;
+  }
+  const contents = `<div class="box contents"><h3>In this record</h3><ol>${r.sections.map((s,i) => `<li><button type="button" data-goto="sec-${i}">${s.h}</button></li>`).join("")}${r.notes && r.notes.length ? `<li><button type="button" data-goto="notes">Notes</button></li>` : ""}</ol></div>`;
+  const related = r.see && r.see.length ? `<div class="box related"><h3>Related records</h3>${r.see.filter(id => BY_ID[id]).map(id => `<a href="#${id}">${artHTML(thumbFor(id), BY_ID[id].title)}<b>${BY_ID[id].title}</b></a>`).join("")}</div>` : "";
+  const sections = r.sections.map((s,i) => {
+    if (s.restricted) return `<h2 id="sec-${i}">${s.h}</h2><div class="restricted"><div class="gate"><span>■ RESTRICTED · CLEARANCE REQUIRED</span><button type="button" data-declassify="${i}">Declassify</button></div><div class="body" id="rb-${i}" hidden>${md(s.html)}</div></div>`;
+    return `<h2 id="sec-${i}">${s.h}</h2>${md(s.html)}`;
+  }).join("");
+  const notes = r.notes && r.notes.length ? `<section class="notes" id="notes"><h2>Sources &amp; Notes</h2><ol>${r.notes.map((n,i) => `<li id="note-${i+1}"><button class="back" type="button" data-back="${i+1}" aria-label="Back to reference ${i+1}">↑</button>${md(n)}</li>`).join("")}</ol></section>` : "";
+  const banner = r.banner ? `<div class="banner ${r.banner[0]}"><b>${r.banner[1]}</b><span>${r.banner[2]}</span></div>` : "";
+  const stub = r.status === "Stub" ? `<div class="banner"><b>Incomplete</b><span>This record is a stub. The archive is accepting testimony.</span></div>` : "";
+  const lead = r.lead.replace(/^<p>/, '<p class="lead">');
+  view.innerHTML = `<div class="sheet">
+    ${mastheadSmall(r.cat + " section")}
+    <div class="rec-top">
+      <div class="kicker">${r.cat} · Accession ${r.acc} · <span class="${cls === "restricted" ? "r" : ""}">Classification: ${r.status}</span></div>
+      <h1 class="hl xl">${r.title}</h1>
+      ${r.hat ? `<p class="hatnote">${md(r.hat)}</p>` : ""}
+      <div class="byline">From the Solis Archive · Revision ${(hash(r.id) % 40) + 3} · Filed under ${r.cat}</div>
+      ${r.status === "Restricted" ? `<span class="stamp-mark" aria-hidden="true">Restricted</span>` : ""}
+    </div>
+    ${banner}${stub}
+    <div class="rec-grid">
+      <div class="rec-main">
+        ${photo(key, ART[key] ? "natural" : "ar-photo", leadCap, CREDIT[key] || "Archive print")}
+        <div class="text cols two">${md(lead)}${sections}</div>
+        ${notes}
+      </div>
+      <aside class="rec-side">${info}${contents}${related}</aside>
+    </div>
+    <div class="amended">Record ${r.acc} · last amended by the archivist</div>
+    ${imprint()}
+  </div>`;
+  renderArt(view);
+  view.dataset.notes = JSON.stringify(r.notes || []);
+}
+
+function renderIndex(){
+  view.innerHTML = `<div class="sheet">
+    ${mastheadSmall("Classified section")}
+    <div class="rec-top">
+      <div class="kicker">Accession register · ${R.length} open · 3 sealed</div>
+      <h1 class="hl xl">Classified Listings</h1>
+      <p class="hatnote">Every record held by the archive, by department. Sealed records are listed for completeness and are not available.</p>
+    </div>
+    <div class="classifieds">
+      ${CATS.map(c => { const list = R.filter(r => r.cat === c).sort((a,b) => a.title.localeCompare(b.title)); return list.length ? `<h2>${c}</h2>${list.map(r => `<a class="listing" href="#${r.id}"><b>${r.title}</b><small>${r.acc}${r.status !== "Open" ? " · " + r.status : ""}</small><span>${excerpt(r, 20)}</span></a>`).join("")}` : ""; }).join("")}
+      <h2>Sealed</h2>
+      ${["First","Second","Seventh"].map((s,i) => `<div class="listing"><b><span class="redact" tabindex="0" role="button" aria-label="Redacted">${s} General</span></b><small style="color:var(--red)">PE-00${[1,2,7][i]} · Sealed</small><span>Record withheld by order.</span></div>`).join("")}
+    </div>
+    ${imprint()}
+  </div>`;
+  renderArt(view);
+}
+
+/* ===================== CHROME ===================== */
+function setupReveal(){}
+function watchToc(){}
+function onScroll(){}
+const topbar = document.getElementById("topbar");
+const menuBtn = document.querySelector(".menu-btn");
+function setMenu(open){ topbar.classList.toggle("open", open); menuBtn.setAttribute("aria-expanded", String(open)); menuBtn.textContent = open ? "Close" : "Sections"; }
+menuBtn.addEventListener("click", () => setMenu(!topbar.classList.contains("open")));
+document.getElementById("topnav").addEventListener("click", e => { if (e.target.closest("a, button")) setMenu(false); });
+window.addEventListener("hashchange", () => setMenu(false));
+
+/* ===================== ROUTER ===================== */
+function route(){
+  const id = location.hash.slice(1) || "home";
+  hideTip();
+  if (id !== "home") cancelAnimationFrame(snowRAF);
+  if (id === "home") renderHome();
+  else if (id === "records") renderIndex();
+  else if (BY_ID[id]) renderRecord(BY_ID[id]);
+  else { location.replace("#home"); return; }
+  document.title = (id === "home" ? "" : ((BY_ID[id] || {title:"All records"}).title + " · ")) + "The Solis Archive";
+  window.scrollTo(0, 0);
+  onScroll();
+  setupReveal();
+}
+window.addEventListener("hashchange", route);
+
+/* ===================== INTERACTIONS ===================== */
+function randomRecord(){ const cur = location.hash.slice(1); let r; do { r = R[Math.floor(Math.random()*R.length)]; } while (R.length > 1 && r.id === cur); location.hash = r.id; }
+const tip = document.getElementById("tip");
+function hideTip(){ tip.hidden = true; }
+function showTip(btn){
+  const n = Number(btn.dataset.fn); const notes = JSON.parse(view.dataset.notes || "[]"); if (!notes[n-1]) return;
+  tip.innerHTML = `<b>[${n}]</b> ` + md(notes[n-1]); tip.hidden = false;
+  const r = btn.getBoundingClientRect(); const w = Math.min(340, window.innerWidth - 24);
+  tip.style.width = w + "px";
+  tip.style.left = Math.max(12, Math.min(window.scrollX + r.left - 20, window.scrollX + window.innerWidth - w - 12)) + "px";
+  tip.style.top = (window.scrollY + r.bottom + 10) + "px";
+}
+function flash(el){ el.classList.add("flash"); setTimeout(() => el.classList.remove("flash"), 1600); }
+const lastRef = {};
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, .redact, a"); if (!t) return;
+  if (t.matches("[data-random]")) { randomRecord(); return; }
+  if (t.matches("[data-fn]")) { const n = t.dataset.fn; lastRef[n] = t; const li = document.getElementById("note-" + n); if (li) { li.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); flash(li); } hideTip(); return; }
+  if (t.matches("[data-back]")) { const ref = lastRef[t.dataset.back] || document.querySelector(`[data-fn="${t.dataset.back}"]`); if (ref) { ref.scrollIntoView({ block: "center", behavior: reduce ? "auto" : "smooth" }); ref.focus({ preventScroll: true }); } return; }
+  if (t.matches("[data-goto]")) { const el = document.getElementById(t.dataset.goto); if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }); return; }
+  if (t.matches("[data-declassify]")) { const b = document.getElementById("rb-" + t.dataset.declassify); b.hidden = false; t.parentElement.querySelector("span").textContent = "□ DECLASSIFIED · READ AT YOUR OWN RISK"; t.remove(); renderArt(b); return; }
+  if (t.matches(".redact")) { t.classList.add("open"); t.removeAttribute("role"); t.removeAttribute("tabindex"); t.removeAttribute("title"); t.setAttribute("aria-label", "Declassified"); return; }
+});
+document.addEventListener("keydown", e => { const t = e.target; if ((e.key === "Enter" || e.key === " ") && t.classList && t.classList.contains("redact")) { e.preventDefault(); t.click(); } if (e.key === "Escape") { hideTip(); closeResults(); } });
+document.addEventListener("mouseover", e => { const b = e.target.closest("[data-fn]"); if (b) showTip(b); });
+document.addEventListener("mouseout", e => { if (e.target.closest("[data-fn]")) hideTip(); });
+document.addEventListener("focusin", e => { const b = e.target.closest("[data-fn]"); if (b) showTip(b); else hideTip(); });
+
+/* search */
+const q = document.getElementById("q"), results = document.getElementById("results");
+const INDEX = R.map(r => ({ id: r.id, title: r.title, cat: r.cat, text: (r.title + " " + plain(r.lead) + " " + r.sections.map(s => s.h + " " + (s.restricted ? "" : plain(s.html))).join(" ")).toLowerCase() }));
+let active = -1;
+function closeResults(){ results.classList.remove("open"); active = -1; }
+q.addEventListener("input", () => {
+  const term = q.value.trim().toLowerCase(); active = -1;
+  if (!term) { closeResults(); return; }
+  const hits = INDEX.map(x => ({ x, score: (x.title.toLowerCase().includes(term) ? 10 : 0) + (x.text.split(term).length - 1) })).filter(h => h.score > 0).sort((a,b) => b.score - a.score).slice(0, 8);
+  results.innerHTML = hits.length ? hits.map(h => `<li><a href="#${h.x.id}" role="option">${h.x.title}<small>${h.x.cat}</small></a></li>`).join("") : `<li><a href="#records">No record found. Browse all records<small>The archive is incomplete</small></a></li>`;
+  results.classList.add("open");
+});
+q.addEventListener("keydown", e => {
+  const items = [...results.querySelectorAll("a")]; if (!items.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); active = (active + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length; items.forEach((a,i) => a.classList.toggle("active", i === active)); }
+  if (e.key === "Enter") { e.preventDefault(); items[active >= 0 ? active : 0].click(); q.value = ""; closeResults(); q.blur(); }
+});
+results.addEventListener("click", () => { q.value = ""; closeResults(); });
+document.addEventListener("click", e => { if (!e.target.closest(".search")) closeResults(); });
+
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => renderArt(view), 200); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => renderArt(view));
+route();
+</script>
+</body>
+</html>
