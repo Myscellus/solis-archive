@@ -304,9 +304,10 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    furnace, citadel, greymarch, ruin, opera, ships, domes, harrow,
    ashgate, council, insignia-3, insignia-4, insignia-5, insignia-6,
    insignia-8, insignia-9, footer
-   Example:  oceania: "images/oceania.png",
+   Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  furnace: "images/furnace.png",
   ships: "images/quays.png",
   "insignia-9": "images/ansel.png",
   "thumb-ansel": "images/ansel-face.webp",
@@ -314,7 +315,7 @@ const ART = {
   myth: "images/myth.png",
   opera: "images/opera.png",
   eurasia: "images/eurasia.png",
-  oceania: "images/oceania.jpg",
+  oceania: "images/oceania.png",
   "insignia-4": "images/edmund.jpg",
   "thumb-edmund": "images/edmund-face.webp",
   "insignia-5": "images/tzadik.jpg",
@@ -606,7 +607,7 @@ lead: "<p>A gazetteer of notable locations in [[oceania|Oceania]].</p>",
 info: { art: "ivory", caption: "Ivory Edge. The archive's correspondent did not go closer.", rows: [["Capital","The Citadel"],["Industry","The Furnace District"],["Borders","Ashgate (east), Harrow Station (west), Ivory Edge (north)"]] },
 sections: [
 { h: "The Citadel", html: "<p>The capital and seat of the Emperor. The central military base is here, and the council meets at City Hall. It is the only city with uninterrupted electricity.</p>" },
-{ h: "The Furnace District", html: "<p>The primary industrial zone, two hours south of the Citadel by heated rail. It never stops. Twenty-hour rotating shifts produce weapons, munitions, vehicles and the chemical compounds for gas masks. Workers live in on-site blocs and are technically employees of the empire rather than slaves, a distinction the empire considers meaningful. It has the highest rate of black-market activity in Oceania.[^1]</p>" },
+{ h: "The Furnace District", art: "furnace", cap: "The Furnace District at the change of shift. The rail line runs straight through the works; the blocs where the workers sleep are the low buildings between the halls.", html: "<p>The primary industrial zone, two hours south of the Citadel by heated rail. It never stops. Twenty-hour rotating shifts produce weapons, munitions, vehicles and the chemical compounds for gas masks. Workers live in on-site blocs and are technically employees of the empire rather than slaves, a distinction the empire considers meaningful. It has the highest rate of black-market activity in Oceania.[^1]</p>" },
 { h: "Ivory Edge", html: "<p>The northern border, where the sun never rises and the air is toxic. Home of the Night Raiders under [[noctis|the Third General]]. The ground sometimes bleeds when disturbed. On certain nights the northern lights scream.[^2]</p>" },
 { h: "Ashgate", html: "<p>A frontier checkpoint on the eastern border: a brutalist iron gate flanked by watchtowers, half-buried in drift. The garrison is understaffed and underpaid and has been making its own arrangements for years. Contraband moves through constantly. The empire knows, and has decided a border post that looks the other way is more useful than none.[^3]</p>" },
 { h: "Harrow Station", html: "<p>A disciplined western outpost where prisoners of war, defectors and persons of interest are processed. Clean, heated, and deeply unpleasant. Interrogation rooms are on the lower level; the upper level looks like any other government office, which is the point.</p>" },
@@ -1105,7 +1106,8 @@ function renderRecord(r){
   const related = r.see && r.see.length ? `<div class="box related"><h3>Related records</h3>${r.see.filter(id => BY_ID[id]).map(id => `<a href="#${id}">${artHTML(thumbFor(id), BY_ID[id].title)}<b>${BY_ID[id].title}</b></a>`).join("")}</div>` : "";
   const sections = r.sections.map((s,i) => {
     if (s.restricted) return `<h2 id="sec-${i}">${s.h}</h2><div class="restricted"><div class="gate"><span>■ RESTRICTED · CLEARANCE REQUIRED</span><button type="button" data-declassify="${i}">Declassify</button></div><div class="body" id="rb-${i}" hidden>${md(s.html)}</div></div>`;
-    return `<h2 id="sec-${i}">${s.h}</h2>${md(s.html)}`;
+    const fig = s.art && ART[s.art] ? photo(s.art, "natural", s.cap || "", CREDIT[s.art] || "Archive print") : "";
+    return `<h2 id="sec-${i}">${s.h}</h2>${fig}${md(s.html)}`;
   }).join("");
   const notes = r.notes && r.notes.length ? `<section class="notes" id="notes"><h2>Sources &amp; Notes</h2><ol>${r.notes.map((n,i) => `<li id="note-${i+1}"><button class="back" type="button" data-back="${i+1}" aria-label="Back to reference ${i+1}">↑</button>${md(n)}</li>`).join("")}</ol></section>` : "";
   const banner = r.banner ? `<div class="banner ${r.banner[0]}"><b>${r.banner[1]}</b><span>${r.banner[2]}</span></div>` : "";
