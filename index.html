@@ -270,6 +270,8 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  "insignia-9": "images/ansel.png",
+  "thumb-ansel": "images/ansel-face.webp",
   council: "images/council.jpg",
   myth: "images/myth.png",
   opera: "images/opera.png",
@@ -505,7 +507,7 @@ see: ["council","ansel","oceania"]
 {
 id: "ansel", title: "Ansel Sylvian", cat: "People", acc: "PE-009", status: "Restricted", accent: "oc",
 lead: "<p><b>Ansel Sylvian</b> is the Ninth General of [[oceania|Oceania]] and the friendliest man on [[council|the council]]. He commands punitive operations, reprisals, and whatever arrives under the Emperor's black seal.</p>",
-info: { art: "insignia-9", caption: "Insignia of the Ninth seat.", pcap: "The Ninth General, smiling. Sylvian bulletin.", rows: [["Seat","Ninth General"],["Age","29"],["Height","5'10\""],["House","[[house-sylvian|Sylvian]]"],["Called","\"The Emperor's Attack Dog\"; \"the Menace\" (council)"],["Known for","The Velmark reprisal"]] },
+info: { art: "insignia-9", caption: "Insignia of the Ninth seat.", pcap: "The Ninth General backstage at the Pandora after his mother's winter gala, with members of the chorus. Printed in the Sylvian bulletins and issued to every regiment on the eastern front the week after Velmark.", rows: [["Seat","Ninth General"],["Age","29"],["Height","5'10\""],["House","[[house-sylvian|Sylvian]]"],["Called","\"The Emperor's Attack Dog\"; \"the Menace\" (council)"],["Known for","The Velmark reprisal"]] },
 sections: [
 { h: "Early life", html: "<p>The only son of House Sylvian's matriarch, raised backstage at the Pandora, falling asleep to his mother's arias. Most children read the bulletins; Ansel watched them being written. He was introduced to the Emperor as a child, and the errands found him early.</p>" },
 { h: "Velmark", html: "<p>His name was made in the east. At 26, the Velmark reprisal ended organised resistance there for a decade.[^1] He sent the casualty figures home in his weekly letter.</p>" },
@@ -820,7 +822,7 @@ function plain(html){ const d = document.createElement("div"); d.innerHTML = htm
 /* ===================== VIEWS (broadsheet) ===================== */
 const view = document.getElementById("view");
 
-const CREDIT = { myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
+const CREDIT = { "insignia-9": "Sylvian bulletin", myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
 const BANNER_CAP = { myth: "A schoolroom history recovered during a Harrow Station search of a teacher's lodgings. The opening chapters, covering the first years after the Cataclysm, had been cut out with the knife found beside it. The teacher maintained the pages were already missing when the book was issued. Both accounts are on file.[^2]", cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "Arrivals at the Pandora on a performance night. The matriarch sang the Greymarch victory to a full house; officers' carriages were turned away at the corner for want of room.", council: "City Hall, the Citadel, where the council meets." };
 const HEADLINES = {
   cataclysm: ["Half of Solis Goes to War; the Sky Does Not Return", "Every surviving nation agrees on how it ended. None of them agree on how it began."],
