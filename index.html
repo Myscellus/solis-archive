@@ -270,6 +270,15 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
 .map .scale { stroke: var(--ink); stroke-width: 1.2; }
 .map a:hover text { fill: #8a1c12; }
 .map-fig figcaption { font-size: 13px; font-style: italic; margin-top: 6px; }
+
+/* island advertisement */
+.box.isle-ad { display: block; background: #3a2817; color: #efe3cc; border: 1px solid #1d130a; outline: 1px solid #3a2817; outline-offset: 3px; text-decoration: none; text-align: center; padding: 16px 14px 14px; position: relative; transition: transform .15s ease, box-shadow .15s ease; box-shadow: inset 0 0 0 1px rgba(239,227,204,.25); }
+.box.isle-ad:hover, .box.isle-ad:focus-visible { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(239,227,204,.45), 0 6px 14px rgba(29,19,10,.35); }
+.isle-ad .k { display: block; font: 600 10.5px var(--f-mono); letter-spacing: .18em; text-transform: uppercase; opacity: .75; border-bottom: 1px solid rgba(239,227,204,.35); padding-bottom: 6px; margin-bottom: 8px; }
+.isle-ad b { display: block; font: 700 21px/1.15 var(--f-head); margin-bottom: 8px; }
+.isle-ad .d { display: block; font: italic 14px/1.45 var(--f-body); opacity: .9; }
+.isle-ad .go { display: inline-block; margin-top: 10px; font: 600 11px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; border: 1px solid rgba(239,227,204,.6); padding: 5px 10px; }
+.isle-ad:hover .go { background: #efe3cc; color: #3a2817; }
 </style>
 </head>
 <body>
@@ -1036,6 +1045,12 @@ function renderHome(){
           <blockquote><p>“By grace of Providence, the realm endures.”</p><cite>The Crown &amp; Altar Gazette, Eurasia</cite></blockquote>
           <blockquote><p>“There was no other way.”</p><cite>Founding doctrine, Oceania</cite></blockquote>
         </div>
+        <a class="box isle-ad" href="https://discord.gg/W69T9YAT4y" target="_blank" rel="noopener">
+          <span class="k">Late Dispatch · Advertisement</span>
+          <b>Mysterious Island Discovered off the Southern Lanes</b>
+          <span class="d">Not on any chart, Oceanian or otherwise. Cartographers baffled; the Admiralty declines comment. Expeditions now forming.</span>
+          <span class="go">Join the expedition →</span>
+        </a>
         <div class="box notice"><b>Sealed by Order</b>The records of the <span class="redact" tabindex="0" role="button" aria-label="Redacted">First</span>, <span class="redact" tabindex="0" role="button" aria-label="Redacted">Second</span> and <span class="redact" tabindex="0" role="button" aria-label="Redacted">Seventh</span> Generals are not available to readers of this edition.</div>
       </aside>
     </div>
