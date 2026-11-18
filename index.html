@@ -319,6 +319,7 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  "insignia-8": "images/lysander.jpg",
   "portrait-ansel": "images/portrait-ansel.jpg",
   "portrait-tzadik": "images/portrait-tzadik.png",
   "portrait-melvyn": "images/portrait-melvyn.png",
@@ -550,7 +551,7 @@ see: ["council","house-cressida","edmund","novagrad"]
 {
 id: "lysander", title: "Lysander Thorne", cat: "People", acc: "PE-008", status: "Restricted", accent: "oc",
 lead: "<p><b>Lysander Thorne</b> is the Eighth General of [[oceania|Oceania]] and, at 28, the youngest on [[council|the council]]. He is never seen without his gas mask. Everyone knows what he is: the price of his tribe's surrender, paid in uniform.</p>",
-info: { art: "insignia-8", caption: "Insignia of the Eighth seat.", pcap: "The Eighth General after a victory. Press photograph, <i>The Vanguard</i>.", rows: [["Seat","Eighth General"],["Age","28"],["Height","5'11\""],["Father","Kardal Thorne, chieftain"],["Enlisted","Age 12, by treaty"],["Mask","Black, gold-lined; always"]] },
+info: { art: "insignia-8", caption: "Insignia of the Eighth seat.", pcap: "The Eighth General on the northern front during the winter advance, shortly before the line moved forward. Press photograph, <i>The Vanguard</i>. The photographer reports that he did not look at the camera once.", rows: [["Seat","Eighth General"],["Age","28"],["Height","5'11\""],["Father","Kardal Thorne, chieftain"],["Enlisted","Age 12, by treaty"],["Mask","Black, gold-lined; always"]] },
 sections: [
 { h: "The Thorne treaty", html: "<p>Lysander was born the only son of Kardal Thorne, chieftain of a warrior tribe on Oceania's frontier. His mother died at his birth. When the tribe was losing to Oceania, Kardal surrendered in exchange for their own territory, on one condition written into the treaty: his twelve-year-old son would enlist in the Oceanian army as a guarantee of the tribe's loyalty.[^1]</p><p>Every promotion Lysander has earned since has been leverage at the treaty table, and every victory has bought the tribe more land. He was appointed Eighth General at 27.</p>" },
 { h: "Reputation", html: "<p>Quiet. Righteous. Means every word exactly as stated. Addresses people by rank, never by name. People underestimate him, and assume the mask is vanity.[^2]</p>" },
@@ -985,7 +986,7 @@ function mapOceania(){
 /* ===================== VIEWS (broadsheet) ===================== */
 const view = document.getElementById("view");
 
-const CREDIT = { "portrait-myfir": "Sylvian bulletin", "insignia-9": "Sylvian bulletin", myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
+const CREDIT = { "insignia-8": "The Vanguard", "portrait-myfir": "Sylvian bulletin", "insignia-9": "Sylvian bulletin", myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
 const PORTRAIT_CAP = {
   noctis: "Official portrait of the Third General. No sitting was recorded. The portrait was delivered to the bulletin office already finished.",
   tzadik: "Official portrait of the Fifth General, taken at the General Staff office. The sitting lasted four minutes. He said one word.",
