@@ -279,6 +279,9 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
 .isle-ad .d { display: block; font: italic 14px/1.45 var(--f-body); opacity: .9; }
 .isle-ad .go { display: inline-block; margin-top: 10px; font: 600 11px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; border: 1px solid rgba(239,227,204,.6); padding: 5px 10px; }
 .isle-ad:hover .go { background: #efe3cc; color: #3a2817; }
+
+.candid { margin: 18px 0 10px; border-top: 3px double var(--ink); padding-top: 12px; }
+.candid figure { margin: 0; }
 </style>
 </head>
 <body>
@@ -316,10 +319,17 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
    Example:  oceania: "images/oceania.jpg",
    =================================================================== */
 const ART = {
+  "portrait-ansel": "images/portrait-ansel.jpg",
+  "portrait-tzadik": "images/portrait-tzadik.png",
+  "portrait-melvyn": "images/portrait-melvyn.png",
+  "portrait-noctis": "images/portrait-noctis.png",
+  "portrait-lysander": "images/portrait-lysander.png",
+  "portrait-myfir": "images/portrait-myfir.png",
+  "thumb-lysander": "images/lysander-portrait-face.webp",
   furnace: "images/furnace.png",
   ships: "images/quays.png",
   "insignia-9": "images/ansel.png",
-  "thumb-ansel": "images/ansel-face.webp",
+  "thumb-ansel": "images/ansel-portrait-face.webp",
   council: "images/council.jpg",
   myth: "images/myth.png",
   opera: "images/opera.png",
@@ -336,9 +346,9 @@ const ART = {
   "adc-rings": "images/adc-rings.png",
   ivory: "images/ivory.jpg",
   novagrad: "images/novagrad.jpg",
-  "thumb-noctis": "images/noctis-face.webp",
-  "thumb-tzadik": "images/tzadik-face.webp",
-  "thumb-melvyn": "images/melvyn-face.webp",
+  "thumb-noctis": "images/noctis-portrait-face.webp",
+  "thumb-tzadik": "images/tzadik-portrait-face.webp",
+  "thumb-melvyn": "images/melvyn-portrait-face.webp",
 };
 /* Scenes with no image of their own reuse one of the main four, each with its own crop. */
 const POS = { "insignia-4": "55% 30%", "insignia-5": "50% 30%", "insignia-6": "52% 28%" };
@@ -574,7 +584,7 @@ id: "house-cressida", title: "House Cressida", cat: "Institutions", acc: "IN-002
 lead: "<p><b>House Cressida</b> is one of the wealthiest and most powerful houses in [[oceania|Oceania]]. It funds roughly 40% of the military, and through its control of the southern maritime trade routes it holds the empire's supply line: food, medicine, textiles and materiel all move on ships its purse pays for.</p>",
 info: { art: "ships", caption: "Cressida-funded shipping, southern lanes.", pcap: "Cressida Quays at the evening change of shift. Every warehouse on the waterfront bears the House crest, painted larger than any state insignia in the port. Nobody has suggested it be made smaller.", rows: [["Heads","Hana and Adam Cressida"],["Heir","Myfir Cressida"],["Former ward","[[melvyn|Melvyn]], Sixth General"],["Holds","40% of military funding; southern trade"]] },
 sections: [
-{ h: "Myfir Cressida", html: "<p>The only heir, around 32. On paper, Lord of the Admiralty and Imperial Trade Commissioner; in practice, the man who holds the purse. He has no military rank and effectively outranks most of the empire.[^1] As a child he was the angel-faced poster boy of Oceania's bulletins, and he grew up at embassy tables learning that everything has a price.</p><p>Court gossip paints him as a pampered aristocrat who has never held a rifle. He allows it. His marksmanship on the winter hunting grounds is lethal, and he keeps some forty wolfdogs on his northern estate, which he fed himself as pups.</p>" },
+{ h: "Myfir Cressida", art: "portrait-myfir", cap: "Myfir Cressida, from a Sylvian society page. The wine was from the House cellars; the bulletin was asked to say so.", html: "<p>The only heir, around 32. On paper, Lord of the Admiralty and Imperial Trade Commissioner; in practice, the man who holds the purse. He has no military rank and effectively outranks most of the empire.[^1] As a child he was the angel-faced poster boy of Oceania's bulletins, and he grew up at embassy tables learning that everything has a price.</p><p>Court gossip paints him as a pampered aristocrat who has never held a rifle. He allows it. His marksmanship on the winter hunting grounds is lethal, and he keeps some forty wolfdogs on his northern estate, which he fed himself as pups.</p>" },
 { h: "The ward", html: "<p>The house took in [[melvyn|Melvyn]] at sixteen: a traitor to his own country, yes, but the enemy of one's enemy makes a lovely ward. He remains Melvyn Cressida on every official document. Relations between the former ward and the house have been distant for some years.[^2]</p>" }
 ],
 notes: [
@@ -974,7 +984,14 @@ function mapOceania(){
 /* ===================== VIEWS (broadsheet) ===================== */
 const view = document.getElementById("view");
 
-const CREDIT = { "insignia-9": "Sylvian bulletin", myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
+const CREDIT = { "portrait-myfir": "Sylvian bulletin", "insignia-9": "Sylvian bulletin", myth: "Harrow Station evidence print", world: "Archive print", eurasia: "Crown & Altar Gazette", oceania: "The Vanguard", novagrad: "Smuggled print", ivory: "Photographer unknown", council: "The Vanguard", citadel: "The Vanguard", furnace: "The Vanguard", opera: "Sylvian bulletin", ships: "Cressida Shipping", domes: "Crown & Altar Gazette", dominions: "Archive print", nordheim: "Photographer unknown", greymarch: "General Staff", "insignia-4": "The Vanguard", "insignia-5": "Sylvian bulletin", "insignia-6": "Photographer withheld", "insignia-3": "Photographer unknown", "adc-sketch": "Artist's impression", "adc-rings": "Registry photograph", cataclysm: "Archive print" };
+const PORTRAIT_CAP = {
+  noctis: "Official portrait of the Third General. No sitting was recorded. The portrait was delivered to the bulletin office already finished.",
+  tzadik: "Official portrait of the Fifth General, taken at the General Staff office. The sitting lasted four minutes. He said one word.",
+  melvyn: "Official portrait of the Sixth General. He approved the first proof without comment, which the photographer found more unsettling than a complaint.",
+  lysander: "Official portrait of the Eighth General, the only one on file. He would not remove the mask, and the bulletin did not ask twice.",
+  ansel: "Official portrait of the Ninth General, issued the week he received his first commission under the black seal."
+};
 const BANNER_CAP = { myth: "A schoolroom history recovered during a Harrow Station search of a teacher's lodgings. The opening chapters, covering the first years after the Cataclysm, had been cut out with the knife found beside it. The teacher maintained the pages were already missing when the book was issued. Both accounts are on file.[^2]", cataclysm: "Photograph of a detonation on an unnamed plain. The location was not recorded. Neither was the photographer.", "adc-sketch": "Artist's impression of a candidate during processing, drawn from a witness account. Photography is not permitted inside the bioengineering division. Faces are not recorded.", ivory: "Ivory Edge, photographed from the last safe ridge.", greymarch: "Greymarch Pass after the thaw.", citadel: "The Citadel.", oceania: "The Citadel under blizzard.", opera: "Arrivals at the Pandora on a performance night. The matriarch sang the Greymarch victory to a full house; officers' carriages were turned away at the corner for want of room.", council: "City Hall, the Citadel, where the council meets." };
 const HEADLINES = {
   cataclysm: ["Half of Solis Goes to War; the Sky Does Not Return", "Every surviving nation agrees on how it ended. None of them agree on how it began."],
@@ -1140,8 +1157,9 @@ function renderRecord(r){
     ${banner}${stub}
     <div class="rec-grid">
       <div class="rec-main">
-        ${photo(key, ART[key] ? "natural" : "ar-photo", leadCap, CREDIT[key] || "Archive print")}
+        ${ART["portrait-" + r.id] ? photo("portrait-" + r.id, "natural", PORTRAIT_CAP[r.id] || "Official portrait.", "Sylvian bulletin") : photo(key, ART[key] ? "natural" : "ar-photo", leadCap, CREDIT[key] || "Archive print")}
         <div class="text cols two">${md(lead)}${sections}</div>
+        ${ART["portrait-" + r.id] && ART[key] && r.info && key === r.info.art ? `<div class="candid">${photo(key, "natural", leadCap, CREDIT[key] || "Archive print")}</div>` : ""}
         ${r.map === "oceania" ? mapOceania() : ""}
         ${notes}
       </div>
