@@ -233,6 +233,43 @@ sup.fn button { background: none; border: 0; padding: 0 1px; cursor: pointer; fo
   .stamp-big { animation: thud .35s cubic-bezier(.2,1.6,.4,1) both; }
   @keyframes thud { from { transform: rotate(-8deg) scale(1.8); opacity: 0; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
 }
+
+/* map */
+.map-fig { margin: 18px 0 14px; border-top: 3px double var(--ink); border-bottom: 1px solid var(--ink); padding: 10px 0 4px; }
+.map { width: 100%; height: auto; display: block; background: var(--paper); font-family: var(--f-head); }
+.map .hl { stroke: var(--ink); stroke-width: .45; opacity: .35; }
+.map .land { fill: var(--paper); }
+.map .shore1 { fill: none; stroke: var(--paper); stroke-width: 7; }
+.map .shore2 { fill: none; stroke: var(--ink); stroke-width: 15; opacity: .13; }
+.map .coast { stroke: var(--ink); stroke-width: 1.6; }
+.map .border { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-dasharray: 7 3 1.5 3; }
+.map .border2 { fill: none; stroke: var(--ink); stroke-width: 1; stroke-dasharray: 2 4; opacity: .8; }
+.map .hatch { stroke: var(--ink); stroke-width: .7; }
+.map .ink, .map .stip { fill: var(--ink); }
+.map .stip { opacity: .55; }
+.map .paperf { fill: var(--paper); }
+.map .mt { fill: var(--paper); stroke: var(--ink); stroke-width: 1.1; stroke-linejoin: round; }
+.map .mts { fill: var(--ink); opacity: .45; }
+.map .rail { fill: none; stroke: var(--ink); stroke-width: 1.4; }
+.map .tie { fill: none; stroke: var(--ink); stroke-width: 6; stroke-dasharray: 1.2 6; }
+.map .lane { fill: none; stroke: var(--ink); stroke-width: 1.1; stroke-dasharray: 8 5; opacity: .75; }
+.map .ub { stroke: var(--ink); stroke-width: 1.6; }
+.map .pass { fill: none; stroke: var(--ink); stroke-width: 2; }
+.map .ring, .map .dotr { fill: var(--paper); stroke: var(--ink); stroke-width: 1.3; }
+.map .post { fill: var(--ink); }
+.map .t { font-size: 14px; fill: var(--ink); }
+.map .tb { font-size: 15px; font-weight: 700; fill: var(--ink); letter-spacing: .06em; }
+.map .ts { font-size: 11px; fill: var(--ink); font-family: var(--f-body, serif); }
+.map .i { font-style: italic; }
+.map .u { text-decoration: underline; }
+.map .region { font-size: 17px; letter-spacing: .28em; fill: var(--ink); }
+.map .nation { font-size: 34px; letter-spacing: .3em; fill: var(--ink); opacity: .82; }
+.map .cart { fill: var(--paper); stroke: var(--ink); stroke-width: 1.6; }
+.map .cart2 { fill: none; stroke: var(--ink); stroke-width: .7; }
+.map .carth { font-family: "UnifrakturMaguntia", serif; font-size: 26px; fill: var(--ink); }
+.map .scale { stroke: var(--ink); stroke-width: 1.2; }
+.map a:hover text { fill: #8a1c12; }
+.map-fig figcaption { font-size: 13px; font-style: italic; margin-top: 6px; }
 </style>
 </head>
 <body>
@@ -358,7 +395,7 @@ notes: [
 see: ["places-eurasia","oceania","founding-myth"]
 },
 {
-id: "oceania", title: "Oceania", cat: "Nations", acc: "NA-002", status: "Open", accent: "oc",
+id: "oceania", title: "Oceania", cat: "Nations", acc: "NA-002", status: "Open", accent: "oc", map: "oceania",
 lead: "<p><b>Oceania</b> is a survivalist empire forged from conquered peoples after the [[cataclysm|Cataclysm]]. Military rank is social rank, every citizen is conscripted at twelve, and God was the first thing it abandoned. It is at war on several fronts at once and, to the irritation of everyone, keeps winning.</p>",
 info: { art: "oceania", caption: "The Citadel under blizzard.", rows: [["Government","Military dictatorship[^1]"],["Head of state","The Emperor, styled Chief General"],["Council","[[council|The Council of Nine]]"],["Capital","The Citadel"],["Religion","None; no churches or gatherings"],["Conscription","From age twelve"],["State slogan","\"Strength is earned. Nothing is given.\"[^2]"]] },
 sections: [
@@ -563,7 +600,7 @@ notes: [
 see: ["oceania","melvyn"]
 },
 {
-id: "places-oceania", title: "Places of Oceania", cat: "Places", acc: "PL-002", status: "Open", accent: "oc",
+id: "places-oceania", title: "Places of Oceania", cat: "Places", acc: "PL-002", status: "Open", accent: "oc", map: "oceania",
 lead: "<p>A gazetteer of notable locations in [[oceania|Oceania]].</p>",
 info: { art: "ivory", caption: "Ivory Edge. The archive's correspondent did not go closer.", rows: [["Capital","The Citadel"],["Industry","The Furnace District"],["Borders","Ashgate (east), Harrow Station (west), Ivory Edge (north)"]] },
 sections: [
@@ -819,6 +856,110 @@ function md(s){
 }
 function plain(html){ const d = document.createElement("div"); d.innerHTML = html; return d.textContent.replace(/\s+/g," ").trim(); }
 
+/* ===================== MAP OF OCEANIA (drawn in code) ===================== */
+function mapOceania(){
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  // midpoint displacement for hand-drawn coastlines and borders
+  function rough(pts, iters, amp){
+    let p = pts.slice();
+    for (let k = 0; k < iters; k++){
+      const out = [];
+      for (let i = 0; i < p.length - 1; i++){
+        const [x1,y1] = p[i], [x2,y2] = p[i+1];
+        const dx = x2-x1, dy = y2-y1, len = Math.hypot(dx,dy) || 1;
+        const off = (rnd() - 0.5) * amp * len / 60;
+        out.push(p[i], [(x1+x2)/2 - dy/len*off, (y1+y2)/2 + dx/len*off]);
+      }
+      out.push(p[p.length-1]); p = out; amp *= 0.62;
+    }
+    return p;
+  }
+  const d = (pts, close) => "M" + pts.map(([x,y]) => x.toFixed(1) + "," + y.toFixed(1)).join("L") + (close ? "Z" : "");
+  const W = 1000, H = 740;
+
+  const coast = rough([[0,515],[120,555],[220,535],[300,595],[390,580],[440,612],[480,600],[560,588],[660,612],[760,560],[860,582],[1000,540]], 5, 30);
+  const land = [[0,0],...coast,[1000,0]];
+  const south = rough([[560,740],[600,705],[700,688],[820,708],[900,676],[1000,690]], 5, 26);
+  const southLand = [...south,[1000,740],[560,740]];
+  const nord = rough([[235,0],[262,140],[205,300],[242,420],[170,548]], 4, 22);
+  const eastCore = rough([[705,0],[680,190],[722,380],[700,575]], 4, 18);
+  const eastOuter = rough([[905,0],[878,240],[920,420],[882,580]], 4, 18);
+
+  const peaks = [];
+  const range = (x0,y0,x1,y1,n,s) => { for (let i=0;i<n;i++){ const t=i/(n-1); peaks.push([x0+(x1-x0)*t+(rnd()-.5)*22, y0+(y1-y0)*t+(rnd()-.5)*18, s*(0.7+rnd()*0.6)]); } };
+  range(250,95,300,235,9,15); range(205,120,230,250,6,12);
+  range(330,150,640,135,14,11); range(720,120,860,170,7,10);
+  const mtn = peaks.map(([x,y,s]) => `<path d="M${x-s},${y} L${x},${y-s*1.25} L${x+s},${y}" class="mt"/><path d="M${x},${y-s*1.25} L${x+s*.35},${y-s*.4} L${x+s},${y}" class="mts"/>`).join("");
+
+  const stip = []; for (let i=0;i<520;i++){ const x=rnd()*W, y=Math.pow(rnd(),1.8)*105; stip.push(`<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${(0.6+rnd()*1.1).toFixed(1)}"/>`); }
+
+  const rail = (pts) => { const p = d(pts); return `<path d="${p}" class="rail"/><path d="${p}" class="tie"/>`; };
+  const town = (x,y,label,href,o={}) => {
+    const mark = o.cap ? `<circle cx="${x}" cy="${y}" r="9" class="ring"/><path d="M${x},${y-6} L${x+1.8},${y-1.8} L${x+6},${y-1.6} L${x+2.6},${y+1.2} L${x+3.8},${y+5.6} L${x},${y+3} L${x-3.8},${y+5.6} L${x-2.6},${y+1.2} L${x-6},${y-1.6} L${x-1.8},${y-1.8}Z" class="ink"/>`
+      : o.post ? `<rect x="${x-5}" y="${y-5}" width="10" height="10" class="post"/>`
+      : `<circle cx="${x}" cy="${y}" r="5" class="dotr"/><circle cx="${x}" cy="${y}" r="1.8" class="ink"/>`;
+    const tx = x + (o.dx ?? 12), ty = y + (o.dy ?? 4);
+    const t = `<text x="${tx}" y="${ty}" class="${o.big ? "tb" : "t"}" text-anchor="${o.anchor || "start"}">${label}</text>${o.sub ? `<text x="${tx}" y="${ty+14}" class="ts" text-anchor="${o.anchor || "start"}">${o.sub}</text>` : ""}`;
+    return href ? `<a href="#${href}">${mark}${t}</a>` : mark + t;
+  };
+
+  return `<figure class="map-fig"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Map of Oceania and its frontiers" class="map">
+  <defs>
+    <pattern id="sea" width="8" height="5" patternUnits="userSpaceOnUse"><path d="M0,2.5 H8" class="hl"/></pattern>
+    <pattern id="conq" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><path d="M0,0 V9" class="hatch"/></pattern>
+    <pattern id="nord" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r=".8" class="ink"/></pattern>
+    <clipPath id="landclip"><path d="${d(land,true)}"/></clipPath>
+  </defs>
+  <rect width="${W}" height="${H}" fill="url(#sea)"/>
+  <path d="${d(land,true)}" class="shore2"/><path d="${d(southLand,true)}" class="shore2"/>
+  <path d="${d(land,true)}" class="shore1"/><path d="${d(southLand,true)}" class="shore1"/>
+  <path d="${d(land,true)}" class="land"/><path d="${d(southLand,true)}" class="land"/>
+  <g clip-path="url(#landclip)">
+    <path d="${d([[0,0],...nord,[0,560]],true)}" fill="url(#nord)" opacity=".55"/>
+    <path d="${d([...eastCore,...eastOuter.slice().reverse()],true)}" fill="url(#conq)" opacity=".5"/>
+    <g class="stip">${stip.join("")}</g>
+  </g>
+  <path d="${d(coast)}" class="coast" fill="none"/>
+  <path d="${d(south)}" class="coast" fill="none"/>
+  <path d="${d(nord)}" class="border"/><path d="${d(eastOuter)}" class="border"/><path d="${d(eastCore)}" class="border2"/>
+  ${mtn}
+  ${rail([[500,300],[505,370],[512,440]])}${rail([[512,440],[490,520],[466,598]])}${rail([[500,300],[420,330],[340,365],[272,392]])}${rail([[500,300],[600,315],[700,322],[800,330],[886,300]])}
+  <path d="M470,616 C520,650 600,660 690,690" class="lane"/><path d="M455,618 C380,660 220,690 70,712" class="lane"/>
+  ${[[548,650],[600,664],[320,672],[230,690]].map(([x,y])=>`<path d="M${x-5},${y-5} L${x+5},${y+5} M${x+5},${y-5} L${x-5},${y+5}" class="ub"/>`).join("")}
+  <text x="560" y="638" class="ts" transform="rotate(8 560 638)">× Eurasian U-boats reported</text>
+
+  <text x="500" y="44" class="region" text-anchor="middle">I V O R Y &#160; E D G E</text>
+  <text x="500" y="62" class="ts" text-anchor="middle">Unsurveyed. The sun does not rise. Air unfit to breathe.</text>
+  <a href="#noctis"><text x="500" y="78" class="ts u" text-anchor="middle">Garrison of the Night Raiders</text></a>
+  <a href="#nordheim"><text x="92" y="250" class="region" text-anchor="middle">NORDHEIM</text></a>
+  <text x="490" y="222" class="nation" text-anchor="middle">O C E A N I A</text>
+  <text x="800" y="230" class="ts i" text-anchor="middle">Eastern</text><text x="800" y="244" class="ts i" text-anchor="middle">conquered territories</text>
+  <a href="#southern-dominions"><text x="790" y="728" class="region" text-anchor="middle">THE SOUTHERN DOMINIONS</text></a>
+  <text x="300" y="664" class="ts i" text-anchor="middle" transform="rotate(-7 300 664)">southern shipping lanes</text>
+  <a href="#eurasia"><text x="36" y="728" class="tb">← To Eurasia</text></a>
+
+  <a href="#tzadik"><path d="M268,180 l8,-6 l8,6" class="pass"/><text x="244" y="200" class="t" text-anchor="end">Greymarch Pass</text><text x="244" y="214" class="ts" text-anchor="end">held 31 hours</text></a>
+  ${town(500,300,"THE CITADEL","places-oceania",{cap:true,big:true,dx:16,dy:-26,sub:"capital · City Hall · the Pandora"})}
+  ${town(548,336,"The Ruin",null,{dx:9,dy:12})}
+  ${town(512,440,"Furnace District","places-oceania",{dx:12,sub:"two hours by heated rail"})}
+  ${town(466,598,"Cressida Quays","house-cressida",{dx:-12,dy:-10,anchor:"end"})}
+  ${town(272,392,"Harrow Station","places-oceania",{post:true,dx:12,sub:"processing"})}
+  ${town(886,300,"Ashgate","places-oceania",{post:true,dx:-12,dy:-10,anchor:"end"})}
+  ${town(800,330,"Velmark","ansel",{dx:0,dy:22,anchor:"middle"})}
+  ${town(960,372,"Novagrad","novagrad",{dx:0,dy:-14,anchor:"middle"})}
+  <text x="960" y="396" class="ts" text-anchor="middle">free city</text>
+
+  <g transform="translate(905,92)" class="rose"><circle r="34" class="ring"/><path d="M0,-44 L7,0 L0,44 L-7,0Z M-44,0 L0,-7 L44,0 L0,7Z" class="ink"/><path d="M0,-44 L7,0 L0,0Z M0,44 L-7,0 L0,0Z" class="paperf"/><text y="-50" class="tb" text-anchor="middle">N</text></g>
+  <g transform="translate(36,548)"><rect width="250" height="104" class="cart"/><rect x="5" y="5" width="240" height="94" class="cart2"/>
+    <text x="125" y="34" class="carth" text-anchor="middle">Oceania</text>
+    <text x="125" y="52" class="ts i" text-anchor="middle">and her frontiers</text>
+    <text x="125" y="70" class="ts" text-anchor="middle">From captured survey sheets. Positions approximate.</text>
+    <text x="125" y="84" class="ts" text-anchor="middle">Novagrad does not appear on Oceanian maps.</text></g>
+  <g transform="translate(555,505)"><path d="M0,0 H120 M0,-4 V4 M60,-4 V4 M120,-4 V4" class="scale"/><rect x="0" y="-2" width="60" height="4" class="ink"/><text x="0" y="16" class="ts">0</text><text x="60" y="16" class="ts" text-anchor="middle">100</text><text x="120" y="16" class="ts" text-anchor="middle">200 versts</text></g>
+  </svg><figcaption>Oceania and her frontiers, drawn for the archive. Railways are shown as hatched lines. The archive could not verify the eastern border; it moves.</figcaption></figure>`;
+}
+
 /* ===================== VIEWS (broadsheet) ===================== */
 const view = document.getElementById("view");
 
@@ -983,6 +1124,7 @@ function renderRecord(r){
       <div class="rec-main">
         ${photo(key, ART[key] ? "natural" : "ar-photo", leadCap, CREDIT[key] || "Archive print")}
         <div class="text cols two">${md(lead)}${sections}</div>
+        ${r.map === "oceania" ? mapOceania() : ""}
         ${notes}
       </div>
       <aside class="rec-side">${info}${contents}${related}</aside>
